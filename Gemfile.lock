@@ -4,12 +4,12 @@ PATH
     gobierto_data (0.0.1)
       actionpack (= 5.2.0)
       activesupport (= 5.2.0)
-      aws-sdk (~> 2.11.45)
-      byebug
-      elasticsearch (~> 6.0.2)
+      aws-sdk (~> 2.11, >= 2.11.45)
+      elasticsearch (~> 6.0, >= 6.0.2)
       elasticsearch-extensions (~> 0.0.27)
-      oj (~> 3.6.0)
-      sequel (~> 5.8.0)
+      ine-places (~> 0.2.0)
+      oj (~> 3.6, >= 3.6.0)
+      sequel (~> 5.8, >= 5.8.0)
 
 GEM
   remote: https://rubygems.org/
@@ -64,6 +64,8 @@ GEM
       multipart-post (>= 1.2, < 3)
     i18n (1.0.1)
       concurrent-ruby (~> 1.0)
+    ine-places (0.2.0)
+      activesupport (>= 4.2)
     jmespath (1.4.0)
     loofah (2.2.2)
       crass (~> 1.0.2)
@@ -94,6 +96,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug (~> 10.0, >= 10.0.2)
   gobierto_data!
 
 BUNDLED WITH

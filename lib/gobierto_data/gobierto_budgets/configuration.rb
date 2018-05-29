@@ -11,6 +11,9 @@ module GobiertoData
     FUNCTIONAL_AREA_NAME = "functional"
     CUSTOM_AREA_NAME = "custom"
 
+    # Types
+    TOTAL_BUDGET_TYPE = "total-budget"
+
     # Elasticsearch indices
     ES_INDEX_FORECAST = "budgets-forecast-v3"
     ES_INDEX_EXECUTED = "budgets-execution-v3"
