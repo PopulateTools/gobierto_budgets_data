@@ -11,8 +11,10 @@ module GobiertoData
           begin
             return client.get(index: index, type: type, id: [ine_code, current_year].join('/'))['_source']['value']
           rescue Elasticsearch::Transport::Transport::Errors::NotFound
+            return nil
           end
         end
+        return nil
       end
     end
   end
