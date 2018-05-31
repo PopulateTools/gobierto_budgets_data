@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "elasticsearch", "~> 6.0", ">= 6.0.2"
   s.add_runtime_dependency "elasticsearch-extensions", "~> 0.0.27"
   s.add_runtime_dependency "sequel", "~> 5.8", ">= 5.8.0"
-  s.add_runtime_dependency "oj", "~> 3.6", ">= 3.6.0"
+  s.add_runtime_dependency "oj", "~> 3.5", ">= 3.5.0"
   s.add_runtime_dependency "ine-places", "~> 0.2.0"
 
   s.add_development_dependency "byebug", "~> 10.0", ">= 10.0.2"

@@ -23,8 +23,8 @@ module GobiertoData
     # Elasticsearch indices
     ES_INDEX_FORECAST = "budgets-forecast-v3"
     ES_INDEX_EXECUTED = "budgets-execution-v3"
-    ES_INDEX_EXECUTED_SERIES = "gobierto-budgets-execution-series-v1"
     ES_INDEX_FORECAST_UPDATED = "budgets-forecast-updated-v1"
+    ES_INDEX_EXECUTED_SERIES = "gobierto-budgets-execution-series-v1"
     ES_INDEX_DATA = "data"
     ES_INDEX_POPULATE_DATA_PROVIDERS = "i-facturas"
   end
