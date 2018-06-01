@@ -13,8 +13,8 @@ Add this line to your `Gemfile`:
 
 You should define the following environment variables
 
-- `S3_BUCKET_NAME`: S3 bucket name where files will be uploaded
-- `AWS_REGION`: S3 region name
-- `AWS_ACCESS_KEY_ID`: S3 access key
-- `AWS_SECRET_ACCESS_KEY`: S3 secret key
+- `GOBIERTO_S3_BUCKET_NAME`: S3 bucket name where files will be uploaded
+- `GOBIERTO_AWS_REGION`: S3 region name
+- `GOBIERTO_AWS_ACCESS_KEY_ID`: S3 access key
+- `GOBIERTO_AWS_SECRET_ACCESS_KEY`: S3 secret key
 - `ELASTIC_SEARCH_URL`: Elasticsearch URL
