@@ -24,15 +24,15 @@ module GobiertoData
       private
 
       def ine_code
-        place&.id.to_i
+        place&.id.try(:to_i)
       end
 
       def province_id
-        place&.province&.id.to_i
+        place&.province&.id.try(:to_i)
       end
 
       def autonomy_id
-        place&.province&.autonomous_region&.id.to_i
+        place&.province&.autonomous_region&.id.try(:to_i)
       end
 
       def place_attributes
