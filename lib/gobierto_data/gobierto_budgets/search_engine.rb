@@ -6,7 +6,7 @@ module GobiertoData
   module GobiertoBudgets
     class SearchEngine
       def self.client
-        @client ||= Elasticsearch::Client.new log: false, url: ENV.fetch("ELASTIC_SEARCH_URL")
+        @client ||= Elasticsearch::Client.new log: false, url: ENV.fetch("ELASTICSEARCH_URL")
       end
     end
   end

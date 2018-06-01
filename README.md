@@ -17,4 +17,4 @@ You should define the following environment variables
 - `GOBIERTO_AWS_REGION`: S3 region name
 - `GOBIERTO_AWS_ACCESS_KEY_ID`: S3 access key
 - `GOBIERTO_AWS_SECRET_ACCESS_KEY`: S3 secret key
-- `ELASTIC_SEARCH_URL`: Elasticsearch URL
+- `ELASTICSEARCH_URL`: Elasticsearch URL
