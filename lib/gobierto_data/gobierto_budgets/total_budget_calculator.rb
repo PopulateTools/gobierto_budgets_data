@@ -40,7 +40,8 @@ module GobiertoData
       end
 
       def place
-        ::INE::Places::Place.find(organization_id)
+        # prevent matches of "8187-gencat-123456", since "8187-gencat-123456".to_i => 8187, and incorrect place gets returned
+        ::INE::Places::Place.find(organization_id) if organization_id =~ /^\d+$/
       end
 
       def import_total_budget(year, index, kind)
