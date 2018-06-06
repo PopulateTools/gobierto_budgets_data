@@ -96,7 +96,7 @@ module GobiertoData
             total_budget: { sum: { field: "amount" } },
             total_budget_per_inhabitant: { sum: { field: "amount_per_inhabitant" } }
           },
-          size: 0
+          size: 10_000
         }
 
         type ||= (kind == GobiertoData::GobiertoBudgets::EXPENSE) ? GobiertoData::GobiertoBudgets::FUNCTIONAL_AREA_NAME : GobiertoData::GobiertoBudgets::ECONOMIC_AREA_NAME
@@ -107,9 +107,14 @@ module GobiertoData
           body: query
         )
 
+        #[
+          #result["aggregations"]["total_budget"]["value"].round(2),
+          #result["aggregations"]["total_budget_per_inhabitant"]["value"].round(2)
+        #]
+
         [
-          result["aggregations"]["total_budget"]["value"].round(2),
-          result["aggregations"]["total_budget_per_inhabitant"]["value"].round(2)
+          result['hits']['hits'].sum{ |h| h['_source']['amount'].to_f.round(2) },
+          result['hits']['hits'].sum{ |h| h['_source']['amount_per_inhabitant'].to_f.round(2) }
         ]
       end
 
