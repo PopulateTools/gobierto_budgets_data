@@ -6,10 +6,18 @@ module GobiertoData
     EXPENSE = "G"
     INCOME = "I"
 
+    ALL_KINDS = [EXPENSE, INCOME].freeze
+
     # Area names
     ECONOMIC_AREA_NAME = "economic"
     FUNCTIONAL_AREA_NAME = "functional"
     CUSTOM_AREA_NAME = "custom"
+
+    ALL_AREAS_NAMES = [
+      ECONOMIC_AREA_NAME,
+      FUNCTIONAL_AREA_NAME,
+      CUSTOM_AREA_NAME
+    ].freeze
 
     # Types
     TOTAL_BUDGET_TYPE = "total-budget"

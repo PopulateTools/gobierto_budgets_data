@@ -3,19 +3,18 @@
 module GobiertoData
   module GobiertoBudgets
     class BudgetLine
+
       def self.all(options)
-        organization_id = options.fetch(:organization_id)
-        area_name       = options.fetch(:area_name)
-        kind            = options.fetch(:kind)
-        level           = options.fetch(:level)
+        area_name = options[:area_name]
 
         terms = [
-          {term:    { kind: kind }},
-          {term:    { organization_id: organization_id }},
-          {term:    { level: level }},
-          {missing: { field: "functional_code"}},
-          {missing: { field: "custom_code"}}
+          { missing: { field: "functional_code"} },
+          { missing: { field: "custom_code"} }
         ]
+
+        permitted_terms.each do |term_key|
+          terms << build_term(term_key, options[term_key]) if options[term_key]
+        end
 
         query = {
           query: {
@@ -38,15 +37,23 @@ module GobiertoData
 
         response["hits"]["hits"].map{ |h| h["_source"] }.map do |row|
           BudgetLinePresenter.new(row.merge(
-            kind: kind,
             area_name: area_name,
             total: response["aggregations"]["total_budget"]["value"],
             total_budget_per_inhabitant: response["aggregations"]["total_budget_per_inhabitant"]["value"]
           ))
         end
       rescue Elasticsearch::Transport::Transport::Errors::NotFound
-        return []
+        []
       end
+
+      def self.build_term(term_key, term_value)
+        { term: { term_key => term_value } }
+      end
+
+      def self.permitted_terms
+        %i[kind organization_id level]
+      end
+
     end
   end
 end
