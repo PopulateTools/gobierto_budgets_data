@@ -21,7 +21,7 @@ module GobiertoData
       end
 
       def upload_file
-        GobiertoData::FileUploader.new(adapter: :s3, content: @file_content.to_json,
+        GobiertoData::FileUploader.new(adapter: ENV.fetch("GOBIERTO_FILE_UPLOADS_ADAPTER").try(:to_sym) { :s3 }, content: @file_content.to_json,
                                        file_name: file_name_for(organization_id),
                                        content_type: "application/json; charset=utf-8").upload!
       end
