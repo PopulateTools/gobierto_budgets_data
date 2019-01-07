@@ -45,7 +45,7 @@ module GobiertoData
 
       def file_base_path
         File.join(
-          defined?(Rails) ? Rails.public_path : "",
+          ENV.fetch("GOBIERTO_PUBLIC_PATH"),
           FILE_PATH_PREFIX,
           file_dirname
         )
