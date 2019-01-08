@@ -27,7 +27,7 @@ module GobiertoData
       end
 
       def file_url
-        file = GobiertoData::FileUploader.new(adapter: ENV.fetch("GOBIERTO_FILE_UPLOADS_ADAPTER").try(:to_sym), file_name: file_name_for(organization_id))
+        file = GobiertoData::FileUploader.new(adapter: ENV.fetch("GOBIERTO_FILE_UPLOADS_ADAPTER").try(:to_sym) { :s3 }, file_name: file_name_for(organization_id))
         file.uploaded_file_exists? && file.call
       end
 
