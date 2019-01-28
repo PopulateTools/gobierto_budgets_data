@@ -21,7 +21,7 @@ module GobiertoData
               _index: index,
               _id: id,
               _type: type,
-              data: attributes
+              data: attributes,
             }
           })
         end
