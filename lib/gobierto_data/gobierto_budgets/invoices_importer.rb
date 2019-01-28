@@ -13,7 +13,9 @@ module GobiertoData
 
       def import!
         invoices = []
+        nitems = 0
         data.each do |attributes|
+          nitems += 1
           date = Date.parse(attributes["date"])
           id = [attributes[:location_id], date.year, attributes[:invoice_id]].join('/')
 
@@ -25,9 +27,12 @@ module GobiertoData
               data: attributes,
             }
           })
-        end
 
-        GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: invoices)
+          if nitems % 100 == 0
+            GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: invoices)
+            invoices = []
+          end
+        end
 
         return invoices.length
       end
