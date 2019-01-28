@@ -28,7 +28,7 @@ module GobiertoData
             }
           })
 
-          if nitems % 100 == 0
+          if nitems%100 == 0
             GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: invoices)
             invoices = []
           end
