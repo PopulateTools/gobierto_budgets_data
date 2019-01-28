@@ -27,6 +27,7 @@ module GobiertoData
     POPULATION_TYPE  = "population"
     DEBT_TYPE  = "debt"
     POPULATE_DATA_PROVIDERS_TYPE="ds-facturas-municipio"
+    INVOICE_TYPE = "invoices"
 
     # Elasticsearch indices
     ES_INDEX_FORECAST = "budgets-forecast-v3"
@@ -35,5 +36,6 @@ module GobiertoData
     ES_INDEX_EXECUTED_SERIES = "gobierto-budgets-execution-series-v1"
     ES_INDEX_DATA = "data"
     ES_INDEX_POPULATE_DATA_PROVIDERS = "i-facturas"
+    ES_INDEX_INVOICES = "invoices"
   end
 end
