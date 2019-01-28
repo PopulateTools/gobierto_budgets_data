@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "digest"
+
 module GobiertoData
   module GobiertoBudgets
     class InvoicesImporter
@@ -17,7 +19,7 @@ module GobiertoData
         data.each do |attributes|
           nitems += 1
           date = Date.parse(attributes["date"])
-          id = [attributes[:location_id], date.year, attributes[:invoice_id]].join('/')
+          id = [attributes["location_id"], date.year, Digest::MD5.hexdigest(attributes["invoice_id"])].join('/')
 
           invoices.push({
             index: {
