@@ -14,6 +14,7 @@ module GobiertoData
       def import!
         invoices = []
         data.each do |attributes|
+          date = Date.parse(attributes["date"])
           id = [attributes[:location_id], date.year, attributes[:invoice_id]].join('/')
 
           invoices.push({
