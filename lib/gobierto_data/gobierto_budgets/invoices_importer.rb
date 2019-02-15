@@ -35,6 +35,7 @@ module GobiertoData
             invoices = []
           end
         end
+        GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: invoices)
 
         return nitems
       end
