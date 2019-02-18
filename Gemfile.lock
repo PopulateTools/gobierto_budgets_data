@@ -9,6 +9,7 @@ PATH
       elasticsearch-extensions (~> 0.0.27)
       ine-places (~> 0.3.0)
       oj (~> 3.5, >= 3.5.0)
+      rake (~> 12.3.2)
 
 GEM
   remote: https://rubygems.org/
@@ -32,13 +33,13 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     ansi (1.5.0)
-    aws-sdk (2.11.209)
-      aws-sdk-resources (= 2.11.209)
-    aws-sdk-core (2.11.209)
+    aws-sdk (2.11.222)
+      aws-sdk-resources (= 2.11.222)
+    aws-sdk-core (2.11.222)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.11.209)
-      aws-sdk-core (= 2.11.209)
+    aws-sdk-resources (2.11.222)
+      aws-sdk-core (= 2.11.222)
     aws-sigv4 (1.0.3)
     builder (3.2.3)
     byebug (10.0.2)
@@ -49,7 +50,7 @@ GEM
       elasticsearch-transport (= 6.1.0)
     elasticsearch-api (6.1.0)
       multi_json
-    elasticsearch-extensions (0.0.30)
+    elasticsearch-extensions (0.0.31)
       ansi
       elasticsearch
     elasticsearch-transport (6.1.0)
@@ -81,6 +82,8 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
+    rake (12.3.2)
+    rb-readline (0.5.5)
     thread_safe (0.3.6)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
@@ -91,6 +94,7 @@ PLATFORMS
 DEPENDENCIES
   byebug (~> 10.0, >= 10.0.2)
   gobierto_data!
+  rb-readline
 
 BUNDLED WITH
    1.17.3
