@@ -18,3 +18,6 @@ You should define the following environment variables
 - `GOBIERTO_AWS_ACCESS_KEY_ID`: S3 access key
 - `GOBIERTO_AWS_SECRET_ACCESS_KEY`: S3 secret key
 - `ELASTICSEARCH_URL`: Elasticsearch URL
+- `POPULATE_DATA_ACCOUNT`
+- `POPULATE_DATA_TOKEN`
+- `POPULATE_DATA_ORIGIN`

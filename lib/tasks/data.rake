@@ -72,10 +72,10 @@ namespace :gobierto_data do
     end
 
     desc "Load debt data from Populate Data"
-    task :load_debt, [:api_endpoint, :api_token, :origin] do |t, args|
-      api_endpoint = args[:api_endpoint]
-      api_token = args[:api_token]
-      origin = args[:origin]
+    task :load_debt do
+      api_endpoint = ENV.fetch("POPULATE_DATA_URL")
+      api_token = ENV.fetch("POPULATE_DATA_TOKEN")
+      origin = ENV.fetch("POPULATE_DATA_ORIGIN")
 
       (2010..(Date.today.year - 1)).each do |year|
         request_uri = api_endpoint + "/datasets/ds-deuda-municipal.json?filter_by_year=#{year}"
@@ -84,25 +84,30 @@ namespace :gobierto_data do
         response = client.fetch
 
         data = response.map do |item|
+          id = item.delete("_id").split('-')[0]
+          item["organization_id"] = item.delete("location_id").to_s
+          item["year"] = item.delete("date").to_i
           {
             index: {
               _index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA,
               _type: GobiertoData::GobiertoBudgets::DEBT_TYPE,
-              _id: item.delete("_id"),
+              _id: id,
               data: item
             }
           }
         end
 
-        GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: data)
+        if data.any?
+          GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: data)
+        end
       end
     end
 
     desc "Load population data from Populate Data"
     task :load_population, [:api_endpoint, :api_token, :origin] do |t, args|
-      api_endpoint = args[:api_endpoint]
-      api_token = args[:api_token]
-      origin = args[:origin]
+      api_endpoint = ENV.fetch("POPULATE_DATA_URL")
+      api_token = ENV.fetch("POPULATE_DATA_TOKEN")
+      origin = ENV.fetch("POPULATE_DATA_ORIGIN")
 
       (2010..(Date.today.year - 1)).each do |year|
         request_uri = api_endpoint + "/datasets/ds-poblacion-municipal.json?filter_by_year=#{year}"
@@ -111,17 +116,22 @@ namespace :gobierto_data do
         response = client.fetch
 
         data = response.map do |item|
+          id = item.delete("_id").split('-')[0]
+          item["organization_id"] = item.delete("location_id").to_s
+          item["year"] = item.delete("date").to_i
           {
             index: {
               _index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA,
               _type: GobiertoData::GobiertoBudgets::POPULATION_TYPE,
-              _id: item.delete("_id"),
+              _id: id,
               data: item
             }
           }
         end
 
-        GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: data)
+        if data.any?
+          GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: data)
+        end
       end
     end
   end
