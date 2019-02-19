@@ -15,6 +15,7 @@ end
 require_relative "gobierto_data/file_uploader"
 require_relative "gobierto_data/gobierto_budgets/configuration"
 require_relative "gobierto_data/gobierto_budgets/search_engine"
+require_relative "gobierto_data/gobierto_budgets/search_engine_writing"
 require_relative "gobierto_data/gobierto_budgets/population"
 require_relative "gobierto_data/gobierto_budgets/budget_line_presenter"
 require_relative "gobierto_data/gobierto_budgets/total_budget_calculator"

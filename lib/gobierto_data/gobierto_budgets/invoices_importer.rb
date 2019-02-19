@@ -31,11 +31,11 @@ module GobiertoData
           })
 
           if nitems%300 == 0
-            GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: invoices)
+            GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: invoices)
             invoices = []
           end
         end
-        GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: invoices)
+        GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: invoices)
 
         return nitems
       end

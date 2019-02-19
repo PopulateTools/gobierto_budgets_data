@@ -63,7 +63,7 @@ module GobiertoData
 
         id = [organization_id, year, kind].join("/")
 
-        GobiertoData::GobiertoBudgets::SearchEngine.client.index(
+        GobiertoData::GobiertoBudgets::SearchEngineWriting.client.index(
           index: index,
           type: GobiertoData::GobiertoBudgets::TOTAL_BUDGET_TYPE,
           id: id,
@@ -107,11 +107,6 @@ module GobiertoData
           body: query
         )
 
-        #[
-          #result["aggregations"]["total_budget"]["value"].round(2),
-          #result["aggregations"]["total_budget_per_inhabitant"]["value"].round(2)
-        #]
-
         [
           result['hits']['hits'].sum{ |h| h['_source']['amount'].to_f.round(2) },
           result['hits']['hits'].sum{ |h| h['_source']['amount_per_inhabitant'].to_f.round(2) }
@@ -139,7 +134,7 @@ module GobiertoData
         end
 
         while bulk_operations.any? do
-          GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: bulk_operations, refresh: true)
+          GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: bulk_operations, refresh: true)
 
           response = GobiertoData::GobiertoBudgets::SearchEngine.client.search(index: index, type: GobiertoData::GobiertoBudgets::TOTAL_BUDGET_TYPE, body: body)
 

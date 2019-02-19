@@ -34,7 +34,7 @@ module GobiertoData
           })
         end
 
-        response = GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: budget_lines)
+        response = GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: budget_lines)
 
         return budget_lines.length
       end

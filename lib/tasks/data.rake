@@ -11,7 +11,7 @@ namespace :gobierto_data do
       #
       # Example: 28079/2015
       # Example: 28079/2015
-      GobiertoData::GobiertoBudgets::SearchEngine.client.indices.put_mapping index: index, type: type, body: {
+      GobiertoData::GobiertoBudgets::SearchEngineWriting.client.indices.put_mapping index: index, type: type, body: {
         type.to_sym => {
           properties: {
             ine_code:              { type: 'integer', index: 'not_analyzed' },
@@ -33,7 +33,7 @@ namespace :gobierto_data do
       #
       # Example: 28079/2015
       # Example: 28079/2015
-      GobiertoData::GobiertoBudgets::SearchEngine.client.indices.put_mapping index: index, type: type, body: {
+      GobiertoData::GobiertoBudgets::SearchEngineWriting.client.indices.put_mapping index: index, type: type, body: {
         type.to_sym => {
           properties: {
             ine_code:              { type: 'integer', index: 'not_analyzed' },
@@ -51,7 +51,7 @@ namespace :gobierto_data do
     task :reset => :environment do
       if GobiertoData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA
         puts "- Deleting #{ES_INDEX_DATA} index"
-        GobiertoData::GobiertoBudgets::SearchEngine.client.indices.delete index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA
+        GobiertoData::GobiertoBudgets::SearchEngineWriting.client.indices.delete index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA
       end
     end
 
@@ -59,7 +59,7 @@ namespace :gobierto_data do
     task :create => :environment do
       unless GobiertoData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA
         puts "- Creating index #{ES_INDEX_DATA}"
-        GobiertoData::GobiertoBudgets::SearchEngine.client.indices.create index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA, body: {
+        GobiertoData::GobiertoBudgets::SearchEngineWriting.client.indices.create index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA, body: {
           settings: { index: { max_result_window: 100_000 } }
         }
       end
@@ -99,7 +99,7 @@ namespace :gobierto_data do
         end
 
         if data.any?
-          GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: data)
+          GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: data)
         end
       end
     end
@@ -132,7 +132,7 @@ namespace :gobierto_data do
         end
 
         if data.any?
-          GobiertoData::GobiertoBudgets::SearchEngine.client.bulk(body: data)
+          GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: data)
         end
       end
     end
