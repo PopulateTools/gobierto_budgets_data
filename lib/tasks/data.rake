@@ -86,6 +86,7 @@ namespace :gobierto_data do
         data = response.map do |item|
           id = item.delete("_id").split('-')[0]
           item["organization_id"] = item.delete("location_id").to_s
+          item["ine_code"] = item["organization_id"].to_i
           item["year"] = item.delete("date").to_i
           {
             index: {
@@ -118,6 +119,7 @@ namespace :gobierto_data do
         data = response.map do |item|
           id = item.delete("_id").split('-')[0]
           item["organization_id"] = item.delete("location_id").to_s
+          item["ine_code"] = item["organization_id"].to_i
           item["year"] = item.delete("date").to_i
           {
             index: {
