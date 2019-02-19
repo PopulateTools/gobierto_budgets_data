@@ -18,7 +18,7 @@ You should define the following environment variables in the application:
 - `GOBIERTO_AWS_ACCESS_KEY_ID`: S3 access key
 - `GOBIERTO_AWS_SECRET_ACCESS_KEY`: S3 secret key
 - `ELASTICSEARCH_URL`: Elasticsearch URL
-- `ELASTICSEARCH_WRITTING_URL`: Elasticsearch URL with write enabled
+- `ELASTICSEARCH_WRITING_URL`: Elasticsearch URL with write enabled
 - `POPULATE_DATA_URL`: Populate Data URL for automatic updates
 - `POPULATE_DATA_TOKEN`: Populate Data token for automatic updates
 - `POPULATE_DATA_ORIGIN`: Populate Data origin for automatic updates
