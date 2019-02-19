@@ -104,7 +104,7 @@ namespace :gobierto_data do
     end
 
     desc "Load population data from Populate Data"
-    task :load_population, [:api_endpoint, :api_token, :origin] do |t, args|
+    task :load_population do
       api_endpoint = ENV.fetch("POPULATE_DATA_URL")
       api_token = ENV.fetch("POPULATE_DATA_TOKEN")
       origin = ENV.fetch("POPULATE_DATA_ORIGIN")
