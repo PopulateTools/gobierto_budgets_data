@@ -1,12 +1,16 @@
+$:.push File.expand_path("../lib", __FILE__)
 Gem::Specification.new do |s|
   s.name        = "gobierto_data"
-  s.version     = "0.0.1"
+  s.version     = "0.1.0"
   s.date        = "2018-05-29"
   s.summary     = "Gobierto Data utils"
   s.description = "This gem contains utilities to load data chunks in Gobierto"
   s.authors     = ["Fernando Blat"]
   s.email       = "fernando@populate.tools"
-  s.files       = Dir["lib/*.rb"]
+  s.files         = `git ls-files`.split("\n")
+  s.test_files    = []
+  s.executables   = []
+  s.require_paths = ["lib"]
   s.homepage    = "https://github.com/PopulateTools/gobierto_data"
   s.license     = "MIT"
   s.add_runtime_dependency "aws-sdk", "~> 2.11", ">= 2.11.45"
