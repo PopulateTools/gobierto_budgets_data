@@ -2,6 +2,8 @@ require_relative "../gobierto_data"
 require "date"
 
 def check_response!(response)
+  return if response.is_a?(Array)
+
   raise(StandardError, response["error"]) if response["error"]
 end
 
