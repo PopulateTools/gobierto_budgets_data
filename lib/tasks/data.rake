@@ -1,6 +1,10 @@
 require_relative "../gobierto_data"
 require "date"
 
+def check_response!(response)
+  raise(StandardError, response["error"]) if response["error"]
+end
+
 namespace :gobierto_data do
   namespace :data do
     def create_debt_mapping(index, type)
@@ -83,6 +87,8 @@ namespace :gobierto_data do
         client = PopulateData::Client.new(request_uri: request_uri, origin: origin, api_token: api_token)
         response = client.fetch
 
+        check_response!(response)
+
         data = response.map do |item|
           id = item.delete("_id").split('-')[0]
           item["organization_id"] = item.delete("location_id").to_s
@@ -115,6 +121,8 @@ namespace :gobierto_data do
 
         client = PopulateData::Client.new(request_uri: request_uri, origin: origin, api_token: api_token)
         response = client.fetch
+
+        check_response!(response)
 
         data = response.map do |item|
           id = item.delete("_id").split('-')[0]
