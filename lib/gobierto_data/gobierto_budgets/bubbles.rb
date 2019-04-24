@@ -42,11 +42,11 @@ module GobiertoData
       end
 
       def expense_lines
-        GobiertoData::GobiertoBudgets::BudgetLine.all(organization_id: organization_id, kind: GobiertoData::GobiertoBudgets::EXPENSE, area_name: GobiertoData::GobiertoBudgets::FUNCTIONAL_AREA_NAME, level: 2)
+        GobiertoData::GobiertoBudgets::BudgetLine.all(organization_id: organization_id, kind: GobiertoData::GobiertoBudgets::EXPENSE, area_name: GobiertoData::GobiertoBudgets::FUNCTIONAL_AREA_NAME, level: 2, updated_forecast: true)
       end
 
       def income_lines
-        GobiertoData::GobiertoBudgets::BudgetLine.all(organization_id: organization_id, kind: GobiertoData::GobiertoBudgets::INCOME, area_name: GobiertoData::GobiertoBudgets::ECONOMIC_AREA_NAME, level: 2)
+        GobiertoData::GobiertoBudgets::BudgetLine.all(organization_id: organization_id, kind: GobiertoData::GobiertoBudgets::INCOME, area_name: GobiertoData::GobiertoBudgets::ECONOMIC_AREA_NAME, level: 2, updated_forecast: true)
       end
 
       def expense_categories(locale)
