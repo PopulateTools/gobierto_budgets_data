@@ -42,11 +42,47 @@ module GobiertoData
       end
 
       def expense_lines
-        GobiertoData::GobiertoBudgets::BudgetLine.all(organization_id: organization_id, kind: GobiertoData::GobiertoBudgets::EXPENSE, area_name: GobiertoData::GobiertoBudgets::FUNCTIONAL_AREA_NAME, level: 2, updated_forecast: true)
+        hits = expense_lines_hits(true)
+
+        expense_lines_hits.each do |original_hit|
+          hits << original_hit if hits.none? { |h| hit_id(h) == hit_id(original_hit) }
+        end
+
+        hits
       end
 
       def income_lines
-        GobiertoData::GobiertoBudgets::BudgetLine.all(organization_id: organization_id, kind: GobiertoData::GobiertoBudgets::INCOME, area_name: GobiertoData::GobiertoBudgets::ECONOMIC_AREA_NAME, level: 2, updated_forecast: true)
+        hits = income_lines_hits(true)
+
+        income_lines_hits.each do |original_hit|
+          hits << original_hit if hits.none? { |h| hit_id(h) == hit_id(original_hit) }
+        end
+
+        hits
+      end
+
+      def hit_id(hit)
+        [hit.year, hit.kind, hit.area_name, hit.code].join("/")
+      end
+
+      def expense_lines_hits(updated_forecast = false)
+        GobiertoData::GobiertoBudgets::BudgetLine.all(
+          organization_id: organization_id,
+          kind: GobiertoData::GobiertoBudgets::EXPENSE,
+          area_name: GobiertoData::GobiertoBudgets::FUNCTIONAL_AREA_NAME,
+          level: 2,
+          updated_forecast: updated_forecast
+        )
+      end
+
+      def income_lines_hits(updated_forecast = false)
+        GobiertoData::GobiertoBudgets::BudgetLine.all(
+          organization_id: organization_id,
+          kind: GobiertoData::GobiertoBudgets::INCOME,
+          area_name: GobiertoData::GobiertoBudgets::ECONOMIC_AREA_NAME,
+          level: 2,
+          updated_forecast: updated_forecast
+        )
       end
 
       def expense_categories(locale)
