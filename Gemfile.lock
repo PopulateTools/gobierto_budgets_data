@@ -45,15 +45,15 @@ GEM
     byebug (10.0.2)
     concurrent-ruby (1.1.4)
     crass (1.0.4)
-    elasticsearch (6.1.0)
-      elasticsearch-api (= 6.1.0)
-      elasticsearch-transport (= 6.1.0)
-    elasticsearch-api (6.1.0)
+    elasticsearch (6.3.1)
+      elasticsearch-api (= 6.3.1)
+      elasticsearch-transport (= 6.3.1)
+    elasticsearch-api (6.3.1)
       multi_json
     elasticsearch-extensions (0.0.31)
       ansi
       elasticsearch
-    elasticsearch-transport (6.1.0)
+    elasticsearch-transport (6.3.1)
       faraday
       multi_json
     erubi (1.8.0)
