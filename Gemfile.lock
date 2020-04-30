@@ -48,19 +48,19 @@ GEM
     byebug (10.0.2)
     concurrent-ruby (1.1.6)
     crass (1.0.6)
-    elasticsearch (6.8.1)
-      elasticsearch-api (= 6.8.1)
-      elasticsearch-transport (= 6.8.1)
-    elasticsearch-api (6.8.1)
+    elasticsearch (6.8.2)
+      elasticsearch-api (= 6.8.2)
+      elasticsearch-transport (= 6.8.2)
+    elasticsearch-api (6.8.2)
       multi_json
     elasticsearch-extensions (0.0.31)
       ansi
       elasticsearch
-    elasticsearch-transport (6.8.1)
-      faraday (>= 0.14, < 1)
+    elasticsearch-transport (6.8.2)
+      faraday (~> 1)
       multi_json
     erubi (1.9.0)
-    faraday (0.17.3)
+    faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
