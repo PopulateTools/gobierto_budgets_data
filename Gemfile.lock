@@ -5,8 +5,8 @@ PATH
       actionpack
       activesupport
       aws-sdk-s3
-      elasticsearch
-      elasticsearch-extensions
+      elasticsearch (~> 6.0, >= 6.0.2)
+      elasticsearch-extensions (~> 0.0.27)
       ine-places (~> 0.3.0)
       oj (~> 3.6)
       rake (~> 13.0)
@@ -54,15 +54,15 @@ GEM
     byebug (10.0.2)
     concurrent-ruby (1.1.6)
     crass (1.0.6)
-    elasticsearch (7.6.0)
-      elasticsearch-api (= 7.6.0)
-      elasticsearch-transport (= 7.6.0)
-    elasticsearch-api (7.6.0)
+    elasticsearch (6.8.2)
+      elasticsearch-api (= 6.8.2)
+      elasticsearch-transport (= 6.8.2)
+    elasticsearch-api (6.8.2)
       multi_json
     elasticsearch-extensions (0.0.31)
       ansi
       elasticsearch
-    elasticsearch-transport (7.6.0)
+    elasticsearch-transport (6.8.2)
       faraday (~> 1)
       multi_json
     erubi (1.9.0)
