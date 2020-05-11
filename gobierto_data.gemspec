@@ -13,15 +13,14 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.homepage    = "https://github.com/PopulateTools/gobierto_data"
   s.license     = "MIT"
-  s.add_runtime_dependency "aws-sdk", "~> 2.11", ">= 2.11.45"
-  s.add_runtime_dependency "actionpack", ">= 5.0.0.1"
-  s.add_runtime_dependency "activesupport", ">= 5.0.0"
-  s.add_runtime_dependency "elasticsearch", "~> 6.0", ">= 6.0.2"
-  s.add_runtime_dependency "elasticsearch-extensions", "~> 0.0.27"
-  s.add_runtime_dependency "oj", "~> 3.5", ">= 3.5.0"
+  s.add_runtime_dependency "aws-sdk-s3"
+  s.add_runtime_dependency "actionpack"
+  s.add_runtime_dependency "activesupport"
+  s.add_runtime_dependency "elasticsearch"
+  s.add_runtime_dependency "elasticsearch-extensions"
+  s.add_runtime_dependency "oj", "~> 3.6"
   s.add_runtime_dependency "ine-places", "~> 0.3.0"
-  s.add_runtime_dependency "rake", "~> 12.3.2"
+  s.add_runtime_dependency "rake", "~> 13.0"
 
-  s.add_development_dependency "byebug", "~> 10.0", ">= 10.0.2"
-  s.add_development_dependency "rb-readline"
+  s.add_development_dependency "byebug"
 end

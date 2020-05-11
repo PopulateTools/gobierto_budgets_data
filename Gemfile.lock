@@ -2,14 +2,14 @@ PATH
   remote: .
   specs:
     gobierto_data (0.1.0)
-      actionpack (>= 5.0.0.1)
-      activesupport (>= 5.0.0)
-      aws-sdk (~> 2.11, >= 2.11.45)
-      elasticsearch (~> 6.0, >= 6.0.2)
-      elasticsearch-extensions (~> 0.0.27)
+      actionpack
+      activesupport
+      aws-sdk-s3
+      elasticsearch
+      elasticsearch-extensions
       ine-places (~> 0.3.0)
-      oj (~> 3.5, >= 3.5.0)
-      rake (~> 12.3.2)
+      oj (~> 3.6)
+      rake (~> 13.0)
 
 GEM
   remote: https://rubygems.org/
@@ -35,28 +35,34 @@ GEM
       zeitwerk (~> 2.2, >= 2.2.2)
     ansi (1.5.0)
     aws-eventstream (1.1.0)
-    aws-sdk (2.11.495)
-      aws-sdk-resources (= 2.11.495)
-    aws-sdk-core (2.11.495)
-      aws-sigv4 (~> 1.0)
+    aws-partitions (1.312.0)
+    aws-sdk-core (3.95.0)
+      aws-eventstream (~> 1, >= 1.0.2)
+      aws-partitions (~> 1, >= 1.239.0)
+      aws-sigv4 (~> 1.1)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.11.495)
-      aws-sdk-core (= 2.11.495)
+    aws-sdk-kms (1.31.0)
+      aws-sdk-core (~> 3, >= 3.71.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-s3 (1.64.0)
+      aws-sdk-core (~> 3, >= 3.83.0)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.1)
     aws-sigv4 (1.1.3)
       aws-eventstream (~> 1.0, >= 1.0.2)
     builder (3.2.4)
     byebug (10.0.2)
     concurrent-ruby (1.1.6)
     crass (1.0.6)
-    elasticsearch (6.8.2)
-      elasticsearch-api (= 6.8.2)
-      elasticsearch-transport (= 6.8.2)
-    elasticsearch-api (6.8.2)
+    elasticsearch (7.6.0)
+      elasticsearch-api (= 7.6.0)
+      elasticsearch-transport (= 7.6.0)
+    elasticsearch-api (7.6.0)
       multi_json
     elasticsearch-extensions (0.0.31)
       ansi
       elasticsearch
-    elasticsearch-transport (6.8.2)
+    elasticsearch-transport (7.6.0)
       faraday (~> 1)
       multi_json
     erubi (1.9.0)
@@ -85,8 +91,7 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.3.0)
       loofah (~> 2.3)
-    rake (12.3.3)
-    rb-readline (0.5.5)
+    rake (13.0.1)
     thread_safe (0.3.6)
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
@@ -96,9 +101,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  byebug (~> 10.0, >= 10.0.2)
+  byebug
   gobierto_data!
-  rb-readline
 
 BUNDLED WITH
    1.17.3
