@@ -42,7 +42,7 @@ module GobiertoData
       end
 
       def expense_lines
-        hits = expense_lines_hits(true)
+        hits = expense_lines_hits(false)
 
         expense_lines_hits.each do |original_hit|
           hits << original_hit if hits.none? { |h| hit_id(h) == hit_id(original_hit) }
@@ -52,7 +52,7 @@ module GobiertoData
       end
 
       def income_lines
-        hits = income_lines_hits(true)
+        hits = income_lines_hits(false)
 
         income_lines_hits.each do |original_hit|
           hits << original_hit if hits.none? { |h| hit_id(h) == hit_id(original_hit) }
