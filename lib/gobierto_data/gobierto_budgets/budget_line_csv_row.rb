@@ -1,0 +1,151 @@
+# frozen_string_literal: true
+
+module GobiertoData
+  module GobiertoBudgets
+    class BudgetLineCsvRow
+      # economic-functional, economic-custom
+      AREA_VALUES_MAPPING = {
+        "economic-functional" => ECONOMIC_AREA_NAME,
+        "economic-custom" => ECONOMIC_AREA_NAME,
+        "economic" => ECONOMIC_AREA_NAME,
+        "functional" => FUNCTIONAL_AREA_NAME,
+        "custom" => CUSTOM_AREA_NAME
+      }
+
+      KIND_VALUES_MAPPING = {
+        "I" => INCOME,
+        "G" => EXPENSE
+      }
+
+      INDEXES_COLUMNS_NAMES_MAPPING = {
+        "initial_value" => ES_INDEX_FORECAST,
+        "modified_value" => ES_INDEX_FORECAST_UPDATED,
+        "executed_value" => ES_INDEX_EXECUTED
+      }
+
+      attr_reader :row
+
+      delegate :code, to: :code_object
+
+      def initialize(row)
+        @row = row
+      end
+
+      def value(index)
+        row.field(INDEXES_COLUMNS_NAMES_MAPPING.key(index)).to_f
+      end
+
+      def year
+        row.field("year").to_i
+      end
+
+      def kind
+        @kind ||= KIND_VALUES_MAPPING[row.field("kind")]
+      end
+
+      def area_name
+        @area_name ||= AREA_VALUES_MAPPING[row.field("area")]
+      end
+
+      def code_object
+        @code_object ||= BudgetLineCode.new(row.field("code"))
+      end
+
+      def level
+        row.field("level").presence.to_i || code_object.level
+      end
+
+      def parent_code
+        row.field("parent_code").presence || code_object.parent_code
+      end
+
+      def organization_id
+        row.field("organization_id")
+      end
+
+      def place
+        return unless organization_id =~ /^\d+$/
+
+        @place ||= ::INE::Places::Place.find(organization_id)
+      end
+
+      def ine_code
+        place&.id.try(:to_i)
+      end
+
+      def province_id
+        place&.province&.id.try(:to_i)
+      end
+
+      def autonomy_id
+        place&.province&.autonomous_region&.id.try(:to_i)
+      end
+
+      def population
+        nil
+      end
+
+      def amount_per_inhabitant(index)
+        return unless population.present?
+
+        (value(index) / population).round(2)
+      end
+
+      def id
+        row.field("ID").presence || automatic_id
+      end
+
+      def automatic_id
+        [
+          organization_id,
+          year,
+          area_code,
+          kind
+        ].join("/")
+      end
+
+      def area_code
+        case row.field("area")
+        when "economic-custom"
+          [row.field("custom_code"), code, "c"].join("/")
+        when "economic-functional"
+          [row.field("functional_code"), code, "f"].join("/")
+        else
+          code
+        end
+      end
+
+      def budget_line(index)
+        {
+          "organization_id": organization_id,
+          "ine_code": ine_code,
+          "province_id": province_id,
+          "autonomy_id": autonomy_id,
+          "year": year,
+          "population": population,
+          "amount": value(index),
+          "code": code,
+          "level": level,
+          "kind": kind,
+          "amount_per_inhabitant": amount_per_inhabitant(index),
+          "parent_code": parent_code
+        }
+      end
+
+      def data
+        INDEXES_COLUMNS_NAMES_MAPPING.map do |column_name, index|
+          next unless row.field(column_name).present?
+
+          {
+            index: {
+              _index: index,
+              _id: id,
+              _type: area_name,
+              data: budget_line(index)
+            }
+          }
+        end.compact
+      end
+    end
+  end
+end
