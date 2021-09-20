@@ -82,7 +82,7 @@ module GobiertoData
       end
 
       def population
-        nil
+        @population ||= GobiertoData::GobiertoBudgets::Population.get(ine_code, year)
       end
 
       def amount_per_inhabitant(index)
