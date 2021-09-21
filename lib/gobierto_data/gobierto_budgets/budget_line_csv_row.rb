@@ -23,12 +23,13 @@ module GobiertoData
         "executed_value" => ES_INDEX_EXECUTED
       }
 
-      attr_reader :row
+      attr_reader :row, :errors
 
       delegate :code, to: :code_object
 
       def initialize(row)
         @row = row
+        @errors = {}
       end
 
       def value(index)
@@ -157,6 +158,14 @@ module GobiertoData
             }
           }
         end.compact
+      end
+
+      def valid?
+        return true if code_object.valid?
+
+        @errors.merge!(code_object.errors)
+
+        false
       end
     end
   end

@@ -24,6 +24,10 @@ module GobiertoData
 
       def parse_data
         rows.each do |row|
+          unless row.valid?
+            raise row.errors.map { |attribute, message| "#{attribute}: #{message}" }.join("\n")
+          end
+
           @output.concat(row.data)
         end
       end

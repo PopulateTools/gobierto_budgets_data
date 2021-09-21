@@ -3,10 +3,11 @@
 module GobiertoData
   module GobiertoBudgets
     class BudgetLineCode
-      attr_reader :code
+      attr_reader :code, :errors
 
       def initialize(code)
         @code = code.to_s
+        @errors = {}
       end
 
       def digits
@@ -34,6 +35,14 @@ module GobiertoData
         end
 
         codes
+      end
+
+      def valid?
+        return true if digits == code.tr("-", "")
+
+        @errors.merge!(code: "\"#{code}\" contains invalid non numeric characters")
+
+        false
       end
     end
   end
