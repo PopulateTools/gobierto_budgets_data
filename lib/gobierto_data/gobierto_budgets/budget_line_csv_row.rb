@@ -43,8 +43,20 @@ module GobiertoData
         @kind ||= KIND_VALUES_MAPPING[row.field("kind")]
       end
 
+      def raw_area_name
+        @raw_area_name ||= row.field("area")
+      end
+
       def area_name
-        @area_name ||= AREA_VALUES_MAPPING[row.field("area")]
+        @area_name ||= AREA_VALUES_MAPPING[raw_area_name]
+      end
+
+      def functional_code
+        @functional_code ||= row.field("functional_code")
+      end
+
+      def custom_code
+        @custom_code ||= row.field("custom_code")
       end
 
       def code_object
@@ -52,7 +64,7 @@ module GobiertoData
       end
 
       def level
-        row.field("level").presence.to_i || code_object.level
+        (row.field("level").presence || code_object.level).to_i
       end
 
       def parent_code

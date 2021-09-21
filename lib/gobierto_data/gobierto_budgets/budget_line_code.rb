@@ -20,7 +20,20 @@ module GobiertoData
       def parent_code
         return if level < 2
 
-        code[0..level - 2]
+        @parent_code ||= code[0..level - 2]
+      end
+
+      def parent_codes
+        return [] unless parent_code.present?
+
+        pc = parent_code
+        codes = [pc]
+
+        while (pc = self.class.new(pc).parent_code).present?
+          codes.append(pc)
+        end
+
+        codes
       end
     end
   end
