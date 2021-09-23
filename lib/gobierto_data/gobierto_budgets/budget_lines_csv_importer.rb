@@ -11,7 +11,7 @@ module GobiertoData
       end
 
       def import!
-        calculate_acumulated_values
+        calculate_accumulated_values
         parse_data
         return 0 if output.blank?
 
@@ -46,7 +46,7 @@ module GobiertoData
         end
       end
 
-      def calculate_acumulated_values
+      def calculate_accumulated_values
         return if parent_codes_present? || !descending_codes_present?
 
         calculations = {}
