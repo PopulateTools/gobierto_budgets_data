@@ -68,6 +68,12 @@ module GobiertoData
                                   end
       end
 
+      def economic_code_data
+        return {} unless economic_code_object.present?
+
+        { economic_functional? ? "functional_code" : "custom_code" => economic_code_object.code }
+      end
+
       def functional_code
         @functional_code ||= row.field("functional_code")
       end
@@ -158,7 +164,7 @@ module GobiertoData
           "kind": kind,
           "amount_per_inhabitant": amount_per_inhabitant(index),
           "parent_code": parent_code
-        }
+        }.merge(economic_code_data)
       end
 
       def data
