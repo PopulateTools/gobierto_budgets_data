@@ -53,6 +53,9 @@ module GobiertoData
         rows.each do |row|
           base_index = [row.year, row.raw_area_name, row.kind, row.organization_id]
           if row.economic_code_object.present?
+            # The values only will be accumulated for the first level of code.
+            # To have accumulations on deeper levels iterate over
+            # row.code_object.parent_codes
             code = row.code_object.parent_codes.last
 
             row.economic_code_object.parent_codes.each do |subcode|
