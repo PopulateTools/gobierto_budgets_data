@@ -52,6 +52,22 @@ module GobiertoData
         @area_name ||= AREA_VALUES_MAPPING[raw_area_name]
       end
 
+      def economic_functional?
+        raw_area_name == "economic-functional"
+      end
+
+      def economic_custom?
+        raw_area_name == "economic-custom"
+      end
+
+      def economic_code_object
+        @economic_code_object ||= if economic_functional?
+                                    BudgetLineCode.new(row.field("functional_code"))
+                                  elsif economic_custom?
+                                    BudgetLineCode.new(row.field("custom_code"))
+                                  end
+      end
+
       def functional_code
         @functional_code ||= row.field("functional_code")
       end

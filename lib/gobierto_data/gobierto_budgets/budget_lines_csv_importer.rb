@@ -8,6 +8,7 @@ module GobiertoData
       def initialize(csv)
         @csv = csv
         @output = []
+        @accumulated_values = {}
       end
 
       def import!
@@ -49,21 +50,24 @@ module GobiertoData
       def calculate_accumulated_values
         return if parent_codes_present? || !descending_codes_present?
 
-        calculations = {}
-
         rows.each do |row|
-          row.code_object.parent_codes.each do |code|
-            accumulated_values = calculations[[row.year, code, row.raw_area_name, row.kind, row.functional_code, row.custom_code, row.organization_id]] || {}
+          base_index = [row.year, row.raw_area_name, row.kind, row.organization_id]
+          if row.economic_code_object.present?
+            code = row.code_object.parent_codes.last
 
-            BudgetLineCsvRow::INDEXES_COLUMNS_NAMES_MAPPING.each do |column_name, index|
-              accumulated_values[column_name] = (accumulated_values.fetch(column_name, 0) + row.value(index).to_f).round(2)
+            row.economic_code_object.parent_codes.each do |subcode|
+              functional_code = row.economic_functional? ? subcode : row.functional_code
+              custom_code = row.economic_custom? ? subcode : row.custom_code
+
+              accumulate(base_index + [code, functional_code, custom_code], row)
             end
-
-            calculations[[row.year, code, row.raw_area_name, row.kind, row.functional_code, row.custom_code, row.organization_id]] = accumulated_values
+          else
+            row.code_object.parent_codes.each do |code|
+              accumulate(base_index + [code, row.functional_code, row.custom_code], row)
+            end
           end
         end
-
-        extra_rows = calculations.map do |(year, code, area_name, kind, functional_code, custom_code, organization_id), values|
+        extra_rows = @accumulated_values.map do |(year, area_name, kind, organization_id, code, functional_code, custom_code), values|
           row_values = values.merge(
             "year" => year,
             "code" => code,
@@ -82,6 +86,15 @@ module GobiertoData
         end
 
         rows.concat(extra_rows)
+      end
+
+      def accumulate(index, row)
+        values = @accumulated_values[index] || {}
+
+        BudgetLineCsvRow::INDEXES_COLUMNS_NAMES_MAPPING.each do |column_name, index|
+          values[column_name] = (values.fetch(column_name, 0) + row.value(index).to_f).round(2)
+        end
+        @accumulated_values[index] = values
       end
     end
   end
