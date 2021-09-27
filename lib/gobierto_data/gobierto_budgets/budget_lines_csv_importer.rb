@@ -3,7 +3,7 @@
 module GobiertoData
   module GobiertoBudgets
     class BudgetLinesCsvImporter
-      attr_accessor :csv, :output
+      attr_accessor :csv, :output, :extra_rows
 
       def initialize(csv)
         @csv = csv
@@ -13,6 +13,8 @@ module GobiertoData
 
       def import!
         calculate_accumulated_values
+        remove_duplicates
+        rows.concat(extra_rows)
         parse_data
         return 0 if output.blank?
 
@@ -37,20 +39,21 @@ module GobiertoData
         @rows ||= csv.map { |row| BudgetLineCsvRow.new(row) }
       end
 
+      def last_level?(code)
+        rows.find { |r| r.parent_code == code }.blank?
+      end
+
       def descending_codes_present?
         rows.find(&:parent_code).present?
       end
 
-      def parent_codes_present?
-        rows.any? do |r1|
-          rows.find { |r2| r2.code == r1.parent_code }
-        end
-      end
-
       def calculate_accumulated_values
-        return if parent_codes_present? || !descending_codes_present?
+        return if !descending_codes_present?
 
         rows.each do |row|
+          # Calculate aggregations only for rows with code on last level
+          next unless last_level?(row.code)
+
           base_index = [row.year, row.raw_area_name, row.kind, row.organization_id]
           if row.economic_code_object.present?
             # The values only will be accumulated for the first level of code.
@@ -70,7 +73,7 @@ module GobiertoData
             end
           end
         end
-        extra_rows = @accumulated_values.map do |(year, area_name, kind, organization_id, code, functional_code, custom_code), values|
+        @extra_rows = @accumulated_values.map do |(year, area_name, kind, organization_id, code, functional_code, custom_code), values|
           row_values = values.merge(
             "year" => year,
             "code" => code,
@@ -87,8 +90,14 @@ module GobiertoData
           )
           BudgetLineCsvRow.new(CSV::Row.new(row_values.keys, row_values.values))
         end
+      end
 
-        rows.concat(extra_rows)
+      def remove_duplicates
+        extra_rows.each do |row|
+          rows.delete_if do |r|
+            [:year, :code, :raw_area_name, :kind, :functional_code, :custom_code].all? { |attr| row.send(attr) == r.send(attr) }
+          end
+        end
       end
 
       def accumulate(index, row)
