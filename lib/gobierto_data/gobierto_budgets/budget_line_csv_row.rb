@@ -68,10 +68,14 @@ module GobiertoData
                                   end
       end
 
+      def economic_code
+        economic_code_object.code
+      end
+
       def economic_code_data
         return {} unless economic_code_object.present?
 
-        { economic_functional? ? "functional_code" : "custom_code" => economic_code_object.code }
+        { economic_functional? ? "functional_code" : "custom_code" => economic_code }
       end
 
       def functional_code
@@ -87,10 +91,22 @@ module GobiertoData
       end
 
       def level
+        return row.field("level").to_i if custom_parent_code?
+
         (row.field("level").presence || code_object.level).to_i
       end
 
+      def custom_parent_code?
+        area_name == CUSTOM_AREA_NAME && row.field("parent_code").present?
+      end
+
+      def custom_level?
+        area_name == CUSTOM_AREA_NAME && row.field("level").present?
+      end
+
       def parent_code
+        return row.field("parent_code") if custom_level?
+
         row.field("parent_code").presence || code_object.parent_code
       end
 

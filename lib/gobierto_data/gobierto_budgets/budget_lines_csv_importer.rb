@@ -47,6 +47,30 @@ module GobiertoData
         rows.find(&:parent_code).present?
       end
 
+      def custom_codes_tree
+        @custom_codes_tree ||= rows.inject({}) do |tree, row|
+          next(tree) unless row.custom_parent_code? || row.custom_level?
+
+          tree.update(row.code => calculate_custom_parent_codes(row.code))
+        end
+      end
+
+      def calculate_custom_parent_codes(code)
+        selected_row = rows.find { |r| r.custom_parent_code? && r.code == code  }
+
+        return [] if selected_row.blank?
+
+        parent_code = selected_row.parent_code
+        parent_row = rows.find { |r| r.custom_parent_code? && r.code == parent_code && r.level.present?  }
+        level = parent_row.present? ? parent_row.level : selected_row.level - 1
+
+        calculate_custom_parent_codes(selected_row.parent_code) + [OpenStruct.new(code: parent_code, level: level)]
+      end
+
+      def custom_parent_codes(code)
+        custom_codes_tree[code] || []
+      end
+
       def calculate_accumulated_values
         return if !descending_codes_present?
 
@@ -54,26 +78,35 @@ module GobiertoData
           # Calculate aggregations only for rows with code on last level
           next unless last_level?(row.code)
 
+          has_custom_main_code = row.custom_parent_code? || row.custom_level?
+
           base_index = [row.year, row.raw_area_name, row.kind, row.organization_id]
+          parent_codes = has_custom_main_code ? custom_parent_codes(row.code) : row.code_object.parent_codes
+
           if row.economic_code_object.present?
             # The values only will be accumulated for the first level of code.
             # To have accumulations on deeper levels iterate over
-            # row.code_object.parent_codes
-            code = row.code_object.parent_codes.last
+            # parent_codes
+            economic_parent_codes = if row.economic_custom?
+                                      custom_parent_codes(row.economic_code)
+                                    else
+                                      row.economic_code_object.parent_codes
+                                    end
+            code = parent_codes.last.code
 
-            row.economic_code_object.parent_codes.each do |subcode|
-              functional_code = row.economic_functional? ? subcode : row.functional_code
-              custom_code = row.economic_custom? ? subcode : row.custom_code
+            economic_parent_codes.each do |subcode|
+              functional_code = row.economic_functional? ? subcode.code : row.functional_code
+              custom_code = row.economic_custom? ? subcode.code : row.custom_code
 
-              accumulate(base_index + [code, functional_code, custom_code], row)
+              accumulate(base_index + [code, functional_code, custom_code, "", 1], row)
             end
           else
-            row.code_object.parent_codes.each do |code|
-              accumulate(base_index + [code, row.functional_code, row.custom_code], row)
+            parent_codes.each do |pc|
+              accumulate(base_index + [pc.code, row.functional_code, row.custom_code, parent_codes.find { |e| e.level == pc.level - 1 }&.code, pc.level], row)
             end
           end
         end
-        @extra_rows = @accumulated_values.map do |(year, area_name, kind, organization_id, code, functional_code, custom_code), values|
+        @extra_rows = @accumulated_values.map do |(year, area_name, kind, organization_id, code, functional_code, custom_code, parent_code, level), values|
           row_values = values.merge(
             "year" => year,
             "code" => code,
@@ -83,8 +116,8 @@ module GobiertoData
             "description" => nil,
             "functional_code" => functional_code,
             "custom_code" => custom_code,
-            "level" => nil,
-            "parent_code" => nil,
+            "parent_code" => parent_code,
+            "level" => level,
             "organization_id" => organization_id,
             "ID" => nil
           )

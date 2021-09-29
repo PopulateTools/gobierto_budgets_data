@@ -27,14 +27,16 @@ module GobiertoData
       def parent_codes
         return [] unless parent_code.present?
 
-        pc = parent_code
-        codes = [pc]
+        @parent_codes ||= begin
+                            pc = OpenStruct.new(code: parent_code, level: level - 1)
+                            codes = [pc]
 
-        while (pc = self.class.new(pc).parent_code).present?
-          codes.append(pc)
-        end
+                            while (pc = OpenStruct.new(code: self.class.new(pc.code).parent_code, level: pc.level - 1)) && pc.code.present?
+                              codes.append(pc)
+                            end
 
-        codes
+                            codes
+                          end
       end
 
       def valid?
