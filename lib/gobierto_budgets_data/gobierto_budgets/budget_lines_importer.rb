@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GobiertoData
+module GobiertoBudgetsData
   module GobiertoBudgets
     class BudgetLinesImporter
       def initialize(options)
@@ -17,10 +17,10 @@ module GobiertoData
           id = [budget_line["organization_id"], year, budget_line["code"], budget_line["kind"]].join("/")
           area_name = budget_line.delete("type")
           if area_name == "economic-custom"
-            area_name = GobiertoData::GobiertoBudgets::ECONOMIC_AREA_NAME
+            area_name = GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME
             id = [budget_line["organization_id"], year, [budget_line["custom_code"], budget_line["code"], "c"].join("/"), budget_line["kind"]].join("/")
           elsif area_name == "economic-functional"
-            area_name = GobiertoData::GobiertoBudgets::ECONOMIC_AREA_NAME
+            area_name = GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME
             id = [budget_line["organization_id"], year, [budget_line["functional_code"], budget_line["code"], "f"].join("/"), budget_line["kind"]].join("/")
           end
 
@@ -34,7 +34,7 @@ module GobiertoData
           })
         end
 
-        response = GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: budget_lines)
+        response = GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: budget_lines)
 
         return budget_lines.length
       end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GobiertoData
+module GobiertoBudgetsData
   module GobiertoBudgets
     class BudgetLineCode
       attr_reader :code, :errors

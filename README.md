@@ -7,7 +7,7 @@ into [Gobierto](https://gobierto.es) instances.
 
 Add this line to your `Gemfile`:
 
-`gem "gobierto_data"`
+`gem "gobierto_budgets_data"`
 
 ## Requirements
 
@@ -26,7 +26,7 @@ You should define the following environment variables in the application:
 If you want to load Rake tasks you should include this snippet in the `Rakefile`:
 
 ```
-# Load tasks from gobierto_data
-spec = Gem::Specification.find_by_name "gobierto_data"
+# Load tasks from gobierto_budgets_data
+spec = Gem::Specification.find_by_name "gobierto_budgets_data"
 load "#{spec.gem_dir}/lib/tasks/data.rake"
 ```

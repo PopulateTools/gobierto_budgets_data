@@ -2,12 +2,12 @@
 
 require "digest"
 
-module GobiertoData
+module GobiertoBudgetsData
   module GobiertoBudgets
     class InvoicesImporter
       def initialize(options)
-        @index = GobiertoData::GobiertoBudgets::ES_INDEX_INVOICES
-        @type = GobiertoData::GobiertoBudgets::INVOICE_TYPE
+        @index = GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_INVOICES
+        @type = GobiertoBudgetsData::GobiertoBudgets::INVOICE_TYPE
         @data = options.fetch(:data)
       end
 
@@ -40,11 +40,11 @@ module GobiertoData
           )
 
           if (nitems % 300).zero?
-            GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: invoices)
+            GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: invoices)
             invoices = []
           end
         end
-        GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: invoices)
+        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: invoices)
 
         nitems
       end

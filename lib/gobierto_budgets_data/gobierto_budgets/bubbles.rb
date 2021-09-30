@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GobiertoData
+module GobiertoBudgetsData
   module GobiertoBudgets
     class Bubbles
       def self.dump(organization_id)
@@ -21,23 +21,23 @@ module GobiertoData
       end
 
       def upload_file
-        GobiertoData::FileUploader.new(adapter: ENV.fetch("GOBIERTO_FILE_UPLOADS_ADAPTER").try(:to_sym) { :s3 }, content: @file_content.to_json,
+        GobiertoBudgetsData::FileUploader.new(adapter: ENV.fetch("GOBIERTO_FILE_UPLOADS_ADAPTER").try(:to_sym) { :s3 }, content: @file_content.to_json,
                                        file_name: file_name_for(organization_id),
                                        content_type: "application/json; charset=utf-8").upload!
       end
 
       def file_url
-        file = GobiertoData::FileUploader.new(adapter: ENV.fetch("GOBIERTO_FILE_UPLOADS_ADAPTER").try(:to_sym) { :s3 }, file_name: file_name_for(organization_id))
+        file = GobiertoBudgetsData::FileUploader.new(adapter: ENV.fetch("GOBIERTO_FILE_UPLOADS_ADAPTER").try(:to_sym) { :s3 }, file_name: file_name_for(organization_id))
         file.uploaded_file_exists? && file.call
       end
 
       def build_data_file
         expense_lines.group_by(&:code).each do |code, lines|
-          fill_data_for(code, lines, GobiertoData::GobiertoBudgets::EXPENSE)
+          fill_data_for(code, lines, GobiertoBudgetsData::GobiertoBudgets::EXPENSE)
         end
 
         income_lines.each.group_by(&:code).uniq.each do |code, lines|
-          fill_data_for(code, lines, GobiertoData::GobiertoBudgets::INCOME)
+          fill_data_for(code, lines, GobiertoBudgetsData::GobiertoBudgets::INCOME)
         end
       end
 
@@ -66,31 +66,31 @@ module GobiertoData
       end
 
       def expense_lines_hits(updated_forecast = false)
-        GobiertoData::GobiertoBudgets::BudgetLine.all(
+        GobiertoBudgetsData::GobiertoBudgets::BudgetLine.all(
           organization_id: organization_id,
-          kind: GobiertoData::GobiertoBudgets::EXPENSE,
-          area_name: GobiertoData::GobiertoBudgets::FUNCTIONAL_AREA_NAME,
+          kind: GobiertoBudgetsData::GobiertoBudgets::EXPENSE,
+          area_name: GobiertoBudgetsData::GobiertoBudgets::FUNCTIONAL_AREA_NAME,
           level: 2,
           updated_forecast: updated_forecast
         )
       end
 
       def income_lines_hits(updated_forecast = false)
-        GobiertoData::GobiertoBudgets::BudgetLine.all(
+        GobiertoBudgetsData::GobiertoBudgets::BudgetLine.all(
           organization_id: organization_id,
-          kind: GobiertoData::GobiertoBudgets::INCOME,
-          area_name: GobiertoData::GobiertoBudgets::ECONOMIC_AREA_NAME,
+          kind: GobiertoBudgetsData::GobiertoBudgets::INCOME,
+          area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME,
           level: 2,
           updated_forecast: updated_forecast
         )
       end
 
       def expense_categories(locale)
-        GobiertoData::GobiertoBudgets::Category.all(locale: locale, area_name: GobiertoData::GobiertoBudgets::FUNCTIONAL_AREA_NAME, kind: GobiertoData::GobiertoBudgets::EXPENSE)
+        GobiertoBudgetsData::GobiertoBudgets::Category.all(locale: locale, area_name: GobiertoBudgetsData::GobiertoBudgets::FUNCTIONAL_AREA_NAME, kind: GobiertoBudgetsData::GobiertoBudgets::EXPENSE)
       end
 
       def income_categories(locale)
-        GobiertoData::GobiertoBudgets::Category.all(locale: locale, area_name: GobiertoData::GobiertoBudgets::ECONOMIC_AREA_NAME, kind: GobiertoData::GobiertoBudgets::INCOME)
+        GobiertoBudgetsData::GobiertoBudgets::Category.all(locale: locale, area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME, kind: GobiertoBudgetsData::GobiertoBudgets::INCOME)
       end
 
       def parent_name(collection, code)
@@ -100,7 +100,7 @@ module GobiertoData
       end
 
       def localized_name_for(locale, code, kind)
-        if kind == GobiertoData::GobiertoBudgets::INCOME
+        if kind == GobiertoBudgetsData::GobiertoBudgets::INCOME
           income_categories(locale)[code]
         else
           expense_categories(locale)[code]
@@ -132,7 +132,7 @@ module GobiertoData
         end
 
         data = {
-          budget_category: kind == GobiertoData::GobiertoBudgets::EXPENSE ? "expense" : "income",
+          budget_category: kind == GobiertoBudgetsData::GobiertoBudgets::EXPENSE ? "expense" : "income",
           id: code.to_s,
           "pct_diff": pct_diff,
           "values": values,
