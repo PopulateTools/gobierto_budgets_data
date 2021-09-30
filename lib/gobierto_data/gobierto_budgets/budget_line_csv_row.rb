@@ -151,7 +151,8 @@ module GobiertoData
           organization_id,
           year,
           area_code,
-          kind
+          kind,
+          area_name
         ].join("/")
       end
 
