@@ -1,6 +1,6 @@
-# Gobierto data
+# Gobierto budgets data
 
-Gobierto data is a Ruby gems that contains some classes, constants and helpers to help load data
+Gobierto budgets data is a Ruby gems that contains some classes, constants and helpers to help load data
 into [Gobierto](https://gobierto.es) instances.
 
 ## How to use this gem
