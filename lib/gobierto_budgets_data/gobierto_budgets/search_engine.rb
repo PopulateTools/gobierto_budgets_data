@@ -2,7 +2,7 @@
 
 require "elasticsearch"
 
-module GobiertoData
+module GobiertoBudgetsData
   module GobiertoBudgets
     class SearchEngine
       def self.client

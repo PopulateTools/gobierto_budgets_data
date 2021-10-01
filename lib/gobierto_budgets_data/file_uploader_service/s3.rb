@@ -2,7 +2,7 @@
 
 require "aws-sdk-s3"
 
-module GobiertoData
+module GobiertoBudgetsData
   module FileUploaderService
     class S3
       attr_reader :file, :file_name

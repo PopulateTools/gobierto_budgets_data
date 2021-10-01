@@ -1,6 +1,6 @@
 $:.push File.expand_path("../lib", __FILE__)
 Gem::Specification.new do |s|
-  s.name        = "gobierto_data"
+  s.name        = "gobierto_budgets_data"
   s.version     = "0.1.0"
   s.date        = "2018-05-29"
   s.summary     = "Gobierto Data utils"
@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.test_files    = []
   s.executables   = []
   s.require_paths = ["lib"]
-  s.homepage    = "https://github.com/PopulateTools/gobierto_data"
+  s.homepage    = "https://github.com/PopulateTools/gobierto_budgets_data"
   s.license     = "MIT"
   s.add_runtime_dependency "aws-sdk-s3"
   s.add_runtime_dependency "actionpack"

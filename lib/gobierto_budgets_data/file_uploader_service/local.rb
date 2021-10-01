@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GobiertoData
+module GobiertoBudgetsData
   module FileUploaderService
     class Local
       FILE_PATH_PREFIX = "system/attachments"

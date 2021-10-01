@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GobiertoData
+module GobiertoBudgetsData
   module GobiertoBudgets
     # Kind of budget lines
     EXPENSE = "G"

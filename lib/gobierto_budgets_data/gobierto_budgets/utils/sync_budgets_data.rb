@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GobiertoData
+module GobiertoBudgetsData
   module GobiertoBudgets
     module Utils
       class SyncBudgetsData
@@ -12,12 +12,12 @@ module GobiertoData
 
         def sync(year)
           [
-            GobiertoData::GobiertoBudgets::ES_INDEX_FORECAST,
-            GobiertoData::GobiertoBudgets::ES_INDEX_EXECUTED,
+            GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_FORECAST,
+            GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_EXECUTED,
           ].each do |index|
             [
-              GobiertoData::GobiertoBudgets::ECONOMIC_AREA_NAME,
-              GobiertoData::GobiertoBudgets::FUNCTIONAL_AREA_NAME
+              GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME,
+              GobiertoBudgetsData::GobiertoBudgets::FUNCTIONAL_AREA_NAME
             ].each do |type|
               terms = [{term: { ine_code: @ine_code } }, { term: { year: year } } ]
               results = @from.search(index: index, type: type, body: { query: { filtered: { filter: { bool: { must: terms }}}}, size: 10_000 })

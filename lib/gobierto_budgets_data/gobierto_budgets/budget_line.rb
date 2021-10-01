@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GobiertoData
+module GobiertoBudgetsData
   module GobiertoBudgets
     class BudgetLine
 
@@ -35,7 +35,7 @@ module GobiertoData
         }
 
         index = if updated_forecast
-                  GobiertoData::GobiertoBudgets::ES_INDEX_FORECAST_UPDATED
+                  GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_FORECAST_UPDATED
                 else
                   default_index
                 end
@@ -66,7 +66,7 @@ module GobiertoData
       end
 
       def self.default_index
-        GobiertoData::GobiertoBudgets::ES_INDEX_FORECAST
+        GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_FORECAST
       end
 
     end

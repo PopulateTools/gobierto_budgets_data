@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GobiertoData
+module GobiertoBudgetsData
   module GobiertoBudgets
     class CustomCategoriesCsvImporter
       attr_reader :csv, :site, :locale

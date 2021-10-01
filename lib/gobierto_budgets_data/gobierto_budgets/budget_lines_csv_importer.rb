@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GobiertoData
+module GobiertoBudgetsData
   module GobiertoBudgets
     class BudgetLinesCsvImporter
       attr_accessor :csv, :output, :extra_rows
@@ -16,9 +16,10 @@ module GobiertoData
         remove_duplicates
         rows.concat(extra_rows)
         parse_data
+        byebug
         return 0 if output.blank?
 
-        GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: output)
+        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: output)
 
         return output.length
       end

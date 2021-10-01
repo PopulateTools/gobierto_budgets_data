@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GobiertoData
+module GobiertoBudgetsData
   module GobiertoBudgets
     class TotalBudgetCalculator
       attr_reader :organization_id, :year, :index, :place_attributes
@@ -12,13 +12,13 @@ module GobiertoData
       end
 
       def calculate!
-        import_total_budget(year, index, GobiertoData::GobiertoBudgets::EXPENSE)
-        import_total_budget(year, index, GobiertoData::GobiertoBudgets::INCOME)
+        import_total_budget(year, index, GobiertoBudgetsData::GobiertoBudgets::EXPENSE)
+        import_total_budget(year, index, GobiertoBudgetsData::GobiertoBudgets::INCOME)
       end
 
       def delete!
-        delete_total_budget(year, index, GobiertoData::GobiertoBudgets::EXPENSE)
-        delete_total_budget(year, index, GobiertoData::GobiertoBudgets::INCOME)
+        delete_total_budget(year, index, GobiertoBudgetsData::GobiertoBudgets::EXPENSE)
+        delete_total_budget(year, index, GobiertoBudgetsData::GobiertoBudgets::INCOME)
       end
 
       private
@@ -49,8 +49,8 @@ module GobiertoData
 
         total_budget, total_budget_per_inhabitant = get_data(index, organization_id, year, kind)
 
-        if total_budget == 0.0 && kind == GobiertoData::GobiertoBudgets::EXPENSE
-          total_budget, total_budget_per_inhabitant = get_data(index, organization_id, year, kind, GobiertoData::GobiertoBudgets::ECONOMIC_AREA_NAME)
+        if total_budget == 0.0 && kind == GobiertoBudgetsData::GobiertoBudgets::EXPENSE
+          total_budget, total_budget_per_inhabitant = get_data(index, organization_id, year, kind, GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME)
         end
 
         data = place_attributes.merge(
@@ -63,9 +63,9 @@ module GobiertoData
 
         id = [organization_id, year, kind].join("/")
 
-        GobiertoData::GobiertoBudgets::SearchEngineWriting.client.index(
+        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.index(
           index: index,
-          type: GobiertoData::GobiertoBudgets::TOTAL_BUDGET_TYPE,
+          type: GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE,
           id: id,
           body: data
         )
@@ -99,9 +99,9 @@ module GobiertoData
           size: 10_000
         }
 
-        type ||= (kind == GobiertoData::GobiertoBudgets::EXPENSE) ? GobiertoData::GobiertoBudgets::FUNCTIONAL_AREA_NAME : GobiertoData::GobiertoBudgets::ECONOMIC_AREA_NAME
+        type ||= (kind == GobiertoBudgetsData::GobiertoBudgets::EXPENSE) ? GobiertoBudgetsData::GobiertoBudgets::FUNCTIONAL_AREA_NAME : GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME
 
-        result = GobiertoData::GobiertoBudgets::SearchEngine.client.search(
+        result = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.search(
           index: index,
           type: type,
           body: query
@@ -127,19 +127,19 @@ module GobiertoData
 
         puts "Searching for first bulk..."
 
-        response = GobiertoData::GobiertoBudgets::SearchEngine.client.search(index: index, type: GobiertoData::GobiertoBudgets::TOTAL_BUDGET_TYPE, body: body)
+        response = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.search(index: index, type: GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE, body: body)
 
         bulk_operations = response["hits"]["hits"].map do |hit|
-          { delete: { _index: index, _type: GobiertoData::GobiertoBudgets::TOTAL_BUDGET_TYPE, _id: hit["_id"] } }
+          { delete: { _index: index, _type: GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE, _id: hit["_id"] } }
         end
 
         while bulk_operations.any? do
-          GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: bulk_operations, refresh: true)
+          GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: bulk_operations, refresh: true)
 
-          response = GobiertoData::GobiertoBudgets::SearchEngine.client.search(index: index, type: GobiertoData::GobiertoBudgets::TOTAL_BUDGET_TYPE, body: body)
+          response = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.search(index: index, type: GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE, body: body)
 
           bulk_operations = response["hits"]["hits"].map do |hit|
-            { delete: { _index: index, _type: GobiertoData::GobiertoBudgets::TOTAL_BUDGET_TYPE, _id: hit["_id"] } }
+            { delete: { _index: index, _type: GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE, _id: hit["_id"] } }
           end
         end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module GobiertoData
+module GobiertoBudgetsData
   module GobiertoBudgets
     class BudgetLineCsvRow
       # economic-functional, economic-custom
@@ -133,7 +133,7 @@ module GobiertoData
       end
 
       def population
-        @population ||= GobiertoData::GobiertoBudgets::Population.get(ine_code, year)
+        @population ||= GobiertoBudgetsData::GobiertoBudgets::Population.get(ine_code, year)
       end
 
       def amount_per_inhabitant(index)

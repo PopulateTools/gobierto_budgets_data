@@ -1,4 +1,4 @@
-require_relative "../gobierto_data"
+require_relative "../gobierto_budgets_data"
 require "date"
 
 def check_response!(response)
@@ -7,17 +7,17 @@ def check_response!(response)
   raise(StandardError, response["error"]) if response["error"]
 end
 
-namespace :gobierto_data do
+namespace :gobierto_budgets_data do
   namespace :data do
     def create_debt_mapping(index, type)
-      m = GobiertoData::GobiertoBudgets::SearchEngine.client.indices.get_mapping index: index, type: type
+      m = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.get_mapping index: index, type: type
       return unless m.empty?
 
       # Document identifier: <ine_code>/<year>
       #
       # Example: 28079/2015
       # Example: 28079/2015
-      GobiertoData::GobiertoBudgets::SearchEngineWriting.client.indices.put_mapping index: index, type: type, body: {
+      GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.indices.put_mapping index: index, type: type, body: {
         type.to_sym => {
           properties: {
             ine_code:              { type: 'integer', index: 'not_analyzed' },
@@ -32,14 +32,14 @@ namespace :gobierto_data do
     end
 
     def create_population_mapping(index, type)
-      m = GobiertoData::GobiertoBudgets::SearchEngine.client.indices.get_mapping index: index, type: type
+      m = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.get_mapping index: index, type: type
       return unless m.empty?
 
       # Document identifier: <ine_code>/<year>
       #
       # Example: 28079/2015
       # Example: 28079/2015
-      GobiertoData::GobiertoBudgets::SearchEngineWriting.client.indices.put_mapping index: index, type: type, body: {
+      GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.indices.put_mapping index: index, type: type, body: {
         type.to_sym => {
           properties: {
             ine_code:              { type: 'integer', index: 'not_analyzed' },
@@ -55,26 +55,26 @@ namespace :gobierto_data do
 
     desc 'Reset ElasticSearch data index'
     task :reset => :environment do
-      if GobiertoData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA
+      if GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA
         puts "- Deleting #{ES_INDEX_DATA} index"
-        GobiertoData::GobiertoBudgets::SearchEngineWriting.client.indices.delete index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA
+        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.indices.delete index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA
       end
     end
 
     desc 'Create mappings for data index'
     task :create => :environment do
-      unless GobiertoData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA
+      unless GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA
         puts "- Creating index #{ES_INDEX_DATA}"
-        GobiertoData::GobiertoBudgets::SearchEngineWriting.client.indices.create index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA, body: {
+        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.indices.create index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA, body: {
           settings: { index: { max_result_window: 100_000 } }
         }
       end
 
-      puts "- Creating #{GobiertoData::GobiertoBudgets::ES_INDEX_DATA} > #{GobiertoData::GobiertoBudgets::DEBT_TYPE}"
-      create_debt_mapping(GobiertoData::GobiertoBudgets::ES_INDEX_DATA, GobiertoData::GobiertoBudgets::DEBT_TYPE)
+      puts "- Creating #{GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA} > #{GobiertoBudgetsData::GobiertoBudgets::DEBT_TYPE}"
+      create_debt_mapping(GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA, GobiertoBudgetsData::GobiertoBudgets::DEBT_TYPE)
 
-      puts "- Creating #{GobiertoData::GobiertoBudgets::ES_INDEX_DATA} > #{GobiertoData::GobiertoBudgets::POPULATION_TYPE}"
-      create_population_mapping(GobiertoData::GobiertoBudgets::ES_INDEX_DATA, GobiertoData::GobiertoBudgets::POPULATION_TYPE)
+      puts "- Creating #{GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA} > #{GobiertoBudgetsData::GobiertoBudgets::POPULATION_TYPE}"
+      create_population_mapping(GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA, GobiertoBudgetsData::GobiertoBudgets::POPULATION_TYPE)
     end
 
     desc "Load debt data from Populate Data"
@@ -98,8 +98,8 @@ namespace :gobierto_data do
           item["year"] = item.delete("date").to_i
           {
             index: {
-              _index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA,
-              _type: GobiertoData::GobiertoBudgets::DEBT_TYPE,
+              _index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA,
+              _type: GobiertoBudgetsData::GobiertoBudgets::DEBT_TYPE,
               _id: id,
               data: item
             }
@@ -107,7 +107,7 @@ namespace :gobierto_data do
         end
 
         if data.any?
-          GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: data)
+          GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: data)
         end
       end
     end
@@ -133,8 +133,8 @@ namespace :gobierto_data do
           item["year"] = item.delete("date").to_i
           {
             index: {
-              _index: GobiertoData::GobiertoBudgets::ES_INDEX_DATA,
-              _type: GobiertoData::GobiertoBudgets::POPULATION_TYPE,
+              _index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA,
+              _type: GobiertoBudgetsData::GobiertoBudgets::POPULATION_TYPE,
               _id: id,
               data: item
             }
@@ -142,7 +142,7 @@ namespace :gobierto_data do
         end
 
         if data.any?
-          GobiertoData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: data)
+          GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: data)
         end
       end
     end

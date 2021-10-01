@@ -6,7 +6,7 @@ require "action_dispatch"
 require_relative "file_uploader_service/s3"
 require_relative "file_uploader_service/local"
 
-module GobiertoData
+module GobiertoBudgetsData
   class FileUploader
     attr_reader :file, :file_name
 
