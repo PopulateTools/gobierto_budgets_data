@@ -16,7 +16,6 @@ module GobiertoBudgetsData
         remove_duplicates
         rows.concat(extra_rows)
         parse_data
-        byebug
         return 0 if output.blank?
 
         GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: output)
