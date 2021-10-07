@@ -121,7 +121,9 @@ module GobiertoBudgetsData
           paid: paid,
           economic_budget_line_code: economic_budget_line_code,
           functional_budget_line_code: functional_budget_line_code
-        }
+        }.merge(
+          location_attributes
+        )
       end
 
       def data
