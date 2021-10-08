@@ -27,5 +27,7 @@ require_relative "gobierto_budgets_data/gobierto_budgets/budget_lines_csv_import
 require_relative "gobierto_budgets_data/gobierto_budgets/custom_categories_csv_importer"
 require_relative "gobierto_budgets_data/gobierto_budgets/budget_line_code"
 require_relative "gobierto_budgets_data/gobierto_budgets/budget_line_csv_row"
+require_relative "gobierto_budgets_data/gobierto_budgets/invoice_csv_row"
 require_relative "gobierto_budgets_data/gobierto_budgets/invoices_importer"
+require_relative "gobierto_budgets_data/gobierto_budgets/invoices_csv_importer"
 require_relative "populate_data/client"
