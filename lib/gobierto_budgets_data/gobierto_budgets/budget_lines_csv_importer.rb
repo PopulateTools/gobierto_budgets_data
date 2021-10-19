@@ -51,7 +51,7 @@ module GobiertoBudgetsData
         @custom_codes_tree ||= rows.inject({}) do |tree, row|
           next(tree) unless row.custom_parent_code? || row.custom_level?
 
-          tree.update(row.code => calculate_custom_parent_codes(row.code))
+          tree.update(row.code => [OpenStruct.new(code: row.code, level: row.level)] + calculate_custom_parent_codes(row.code))
         end
       end
 
@@ -90,7 +90,7 @@ module GobiertoBudgetsData
             economic_parent_codes = if row.economic_custom?
                                       custom_parent_codes(row.economic_code)
                                     else
-                                      row.economic_code_object.parent_codes
+                                      [OpenStruct.new(code: row.economic_code_object.code, level: row.economic_code_object.level)] + row.economic_code_object.parent_codes
                                     end
             code = parent_codes.last.code
 
@@ -99,6 +99,7 @@ module GobiertoBudgetsData
               custom_code = row.economic_custom? ? subcode.code : row.custom_code
 
               accumulate(base_index + [code, functional_code, custom_code, "", 1], row)
+              accumulate(base_index + [row.code, functional_code, custom_code, row.parent_code, row.level], row)
             end
           else
             parent_codes.each do |pc|
