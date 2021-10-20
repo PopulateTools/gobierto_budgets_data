@@ -113,7 +113,7 @@ module GobiertoBudgetsData
             "year" => year,
             "code" => code,
             "area" => area_name,
-            "kind" => kind,
+            "kind" => invert_kind(kind),
             "name" => nil,
             "description" => nil,
             "functional_code" => functional_code,
@@ -142,6 +142,14 @@ module GobiertoBudgetsData
           values[column_name] = (values.fetch(column_name, 0) + row.value(index).to_f).round(2)
         end
         @accumulated_values[index] = values
+      end
+
+      def kind_values_mapping_inverted
+        @kind_values_mapping_inverted ||= BudgetLineCsvRow::KIND_VALUES_MAPPING.invert
+      end
+
+      def invert_kind(kind)
+        kind_values_mapping_inverted[kind]
       end
     end
   end
