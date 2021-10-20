@@ -9,6 +9,7 @@ module GobiertoBudgetsData
         @csv = csv
         @output = []
         @accumulated_values = {}
+        @extra_rows = []
       end
 
       def import!
@@ -127,8 +128,6 @@ module GobiertoBudgetsData
       end
 
       def remove_duplicates
-        return if extra_rows.nil?
-
         extra_rows.each do |row|
           rows.delete_if do |r|
             [:year, :code, :raw_area_name, :kind, :functional_code, :custom_code].all? { |attr| row.send(attr) == r.send(attr) }
