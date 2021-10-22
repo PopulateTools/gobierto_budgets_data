@@ -58,7 +58,7 @@ module GobiertoBudgetsData
       end
 
       def bucket_name
-        @bucket_name ||= ENV.fetch("GOBIERTO_S3_BUCKET_NAME")
+        @bucket_name ||= ENV.fetch("S3_BUCKET_NAME")
       end
 
       def object
@@ -69,9 +69,9 @@ module GobiertoBudgetsData
 
       def client
         Aws::S3::Client.new(
-          region: ENV.fetch("GOBIERTO_AWS_REGION"),
-          access_key_id: ENV.fetch("GOBIERTO_AWS_ACCESS_KEY_ID"),
-          secret_access_key: ENV.fetch("GOBIERTO_AWS_SECRET_ACCESS_KEY")
+          region: ENV.fetch("AWS_REGION"),
+          access_key_id: ENV.fetch("AWS_ACCESS_KEY_ID"),
+          secret_access_key: ENV.fetch("AWS_SECRET_ACCESS_KEY")
         )
       end
     end
