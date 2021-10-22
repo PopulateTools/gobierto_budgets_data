@@ -172,6 +172,17 @@ module GobiertoBudgetsData
         end
       end
 
+      def unavailable_custom_category?
+        return unless area_name == CUSTOM_AREA_NAME
+
+        ::GobiertoBudgets::Category.joins(:site).where(
+          sites: { organization_id: organization_id },
+          kind: kind,
+          code: code,
+          area_name: area_name
+        ).empty?
+      end
+
       def budget_line(index)
         {
           "organization_id": organization_id,
