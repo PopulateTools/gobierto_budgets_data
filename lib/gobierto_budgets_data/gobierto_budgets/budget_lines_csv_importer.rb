@@ -125,7 +125,7 @@ module GobiertoBudgetsData
             "ID" => nil
           )
           BudgetLineCsvRow.new(CSV::Row.new(row_values.keys, row_values.values))
-        end
+        end.reject(&:unavailable_custom_category?)
       end
 
       def remove_duplicates
