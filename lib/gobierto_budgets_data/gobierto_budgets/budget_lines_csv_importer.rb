@@ -3,13 +3,14 @@
 module GobiertoBudgetsData
   module GobiertoBudgets
     class BudgetLinesCsvImporter
-      attr_accessor :csv, :output, :extra_rows
+      attr_accessor :csv, :output, :extra_rows, :thousands_separator, :decimal_separator
 
       def initialize(csv)
         @csv = csv
         @output = []
         @accumulated_values = {}
         @extra_rows = []
+        @thousands_separator, @decimal_separator = detect_thousand_and_decimal_separators
       end
 
       def import!
@@ -37,7 +38,7 @@ module GobiertoBudgetsData
       end
 
       def rows
-        @rows ||= csv.map { |row| BudgetLineCsvRow.new(row) }
+        @rows ||= csv.map { |row| BudgetLineCsvRow.new(row, thousands_separator: thousands_separator, decimal_separator: decimal_separator) }.reject(&:unavailable_custom_category?)
       end
 
       def last_level?(code)
@@ -150,6 +151,35 @@ module GobiertoBudgetsData
 
       def invert_kind(kind)
         kind_values_mapping_inverted[kind]
+      end
+
+      def detect_thousand_and_decimal_separators
+        comma_detected = false
+        point_detected = false
+        comma_as_decimal_detected = false
+        point_as_decimal_detected = false
+
+        csv.each do |row|
+          raw_values = row.values_at(*BudgetLineCsvRow::INDEXES_COLUMNS_NAMES_MAPPING.keys)
+          raw_values.each do |raw_value|
+            next unless /[,.]/.match?(raw_value)
+            return [",", "."] if raw_value.count(",") > 1 || /,...\./.match?(raw_value)
+            return [".", ","] if raw_value.count(".") > 1 || /\....,/.match?(raw_value)
+
+            includes_comma = raw_value.include?(",")
+            includes_point = raw_value.include?(".")
+            comma_detected ||= includes_comma
+            point_detected ||= includes_point
+            comma_as_decimal_detected ||=  includes_comma && !/\d,\d\d\d\z/.match?(raw_value)
+            point_as_decimal_detected ||=  includes_point && !/\d\.\d\d\d\z/.match?(raw_value)
+          end
+        end
+
+        return [".", ","] if comma_as_decimal_detected
+        return [",", "."] if point_as_decimal_detected
+        return [".", ","] if comma_detected && !point_detected
+
+        [",", "."]
       end
     end
   end

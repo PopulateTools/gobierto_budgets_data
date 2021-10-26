@@ -23,17 +23,23 @@ module GobiertoBudgetsData
         "executed_value" => ES_INDEX_EXECUTED
       }
 
-      attr_reader :row, :errors
+      attr_reader :row, :errors, :thousands_separator, :decimal_separator
 
       delegate :code, to: :code_object
 
-      def initialize(row)
+      def initialize(row, opts = {})
         @row = row
+        @thousands_separator = opts.fetch(:thousands_separator, ",")
+        @decimal_separator = opts.fetch(:decimal_separator, ".")
         @errors = {}
       end
 
       def value(index)
-        row.field(INDEXES_COLUMNS_NAMES_MAPPING.key(index)).to_f
+        raw_value = row.field(INDEXES_COLUMNS_NAMES_MAPPING.key(index))
+        return raw_value if raw_value.is_a? Numeric
+        return 0.0 unless raw_value.is_a? String
+
+        raw_value.delete(thousands_separator).tr(decimal_separator, ".").to_f
       end
 
       def year
@@ -164,6 +170,17 @@ module GobiertoBudgetsData
         else
           code
         end
+      end
+
+      def unavailable_custom_category?
+        return unless area_name == CUSTOM_AREA_NAME
+
+        ::GobiertoBudgets::Category.joins(:site).where(
+          sites: { organization_id: organization_id },
+          kind: kind,
+          code: code,
+          area_name: area_name
+        ).empty?
       end
 
       def budget_line(index)
