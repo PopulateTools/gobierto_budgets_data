@@ -6,7 +6,7 @@ module GobiertoBudgetsData
       attr_reader :code, :errors
 
       def initialize(code)
-        @code = code.to_s
+        @code = code.to_s.strip
         @errors = {}
       end
 
@@ -40,7 +40,7 @@ module GobiertoBudgetsData
       end
 
       def valid?
-        return true if digits == code.tr("-", "")
+        return true if digits == code.tr("-", "").strip
 
         @errors.merge!(code: "\"#{code}\" contains invalid non numeric characters")
 
