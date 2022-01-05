@@ -21,7 +21,8 @@ module GobiertoBudgetsData
               site: site,
               area_name: CUSTOM_AREA_NAME,
               kind: kind,
-              code: row.field("code")
+              code: row.field("code"),
+              parent_code: row.field("parent_code")
             }
             if (category = ::GobiertoBudgets::Category.where(category_attrs).first)
               category.update!(custom_name_translations: (category.custom_name_translations.presence || {}).merge(name_translations))
