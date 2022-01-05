@@ -79,6 +79,8 @@ module GobiertoBudgetsData
         @index = attributes[:index]
         @area_name = attributes[:area_name]
         @amount = attributes[:amount]
+        # Population can be provided as argument for performance reasons
+        @population = attributes[:population]
         @custom_code = attributes[:custom_code]
         @functional_code = attributes[:functional_code]
 
