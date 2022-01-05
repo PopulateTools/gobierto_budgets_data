@@ -3,15 +3,6 @@
 module GobiertoBudgetsData
   module GobiertoBudgets
     class BudgetLineSicalwinRow
-      # economic-functional, economic-custom
-      AREA_VALUES_MAPPING = {
-        "economic-functional" => ECONOMIC_AREA_NAME,
-        "economic-custom" => ECONOMIC_AREA_NAME,
-        "economic" => ECONOMIC_AREA_NAME,
-        "functional" => FUNCTIONAL_AREA_NAME,
-        "custom" => CUSTOM_AREA_NAME
-      }.freeze
-
       INDEXES_COLUMNS_NAMES_MAPPING = {
         EXPENSE => {
           ES_INDEX_FORECAST => "Créditos Iniciales",
