@@ -11,9 +11,14 @@ module GobiertoBudgetsData
 
         def process
           population = GobiertoBudgetsData::GobiertoBudgets::Population.get(@raw_rows.first.organization_id.to_i, @raw_rows.first.year.to_i)
+          kind = @raw_rows.first.kind
+
           rows_repository = {}
 
           GobiertoBudgetsData::GobiertoBudgets::ALL_AREAS_NAMES.each do |area_name|
+            # Skip functional and custom area when the file is income
+            next if kind == GobiertoBudgetsData::GobiertoBudgets::INCOME && area_name != GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME
+
             rows_repository[area_name] ||= {}
 
             @raw_rows.each do |row|
@@ -28,7 +33,7 @@ module GobiertoBudgetsData
                   population: population,
                   year: row.year,
                   code: code,
-                  kind: row.kind,
+                  kind: kind,
                   index: index,
                   area_name: area_name,
                   amount: 0
@@ -42,7 +47,7 @@ module GobiertoBudgetsData
                     population: population,
                     year: row.year,
                     code: parent_code.code,
-                    kind: row.kind,
+                    kind: kind,
                     index: index,
                     area_name: area_name,
                     amount: 0
