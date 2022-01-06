@@ -99,8 +99,8 @@ module GobiertoBudgetsData
       def location_attributes
         {
           location_id: place&.id,
-          province_id: place&.province.id,
-          autonomous_region_id: place&.province.autonomous_region.id
+          province_id: place&.province&.id,
+          autonomous_region_id: place&.province&.autonomous_region&.id
         }
       end
 
