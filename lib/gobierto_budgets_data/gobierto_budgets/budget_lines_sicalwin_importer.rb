@@ -10,7 +10,12 @@ module GobiertoBudgetsData
       end
 
       def import!
-        budget_lines = GobiertoBudgetsData::GobiertoBudgets::Utils::SicalwinBudgetLineProcessor.new(load_raw_rows).process
+        raw_rows = load_raw_rows
+        if raw_rows.empty?
+          raise "No rows imported from CSV. Review the file to check if cells are empty"
+        end
+
+        budget_lines = GobiertoBudgetsData::GobiertoBudgets::Utils::SicalwinBudgetLineProcessor.new(raw_rows).process
 
         import_data = budget_lines.map(&:data)
 
@@ -26,7 +31,7 @@ module GobiertoBudgetsData
 
       def load_raw_rows
         @csv.map do |row|
-          if row.to_h.values.all?(&:present?)
+          if row.field("Org.").present? && row.field("Eco.").present?
             BudgetLineSicalwinRow.new(row, year: @year, organization_id: @organization_id)
           end
         end.compact

@@ -42,19 +42,15 @@ module GobiertoBudgetsData
         code = case area_name
                when ECONOMIC_AREA_NAME
                  row["Eco."]
-               when FUNCTIONAL_AREA_NAME
+               when FUNCTIONAL_AREA_NAME, ECONOMIC_FUNCTIONAL_AREA_NAME
                  row["Pro."]
-               when CUSTOM_AREA_NAME
+               when CUSTOM_AREA_NAME, ECONOMIC_CUSTOM_AREA_NAME
                  kind == EXPENSE ? [row["Org."], row["Pro."], row["Eco."]].join("-") : [row["Org."], row["Eco."]].join("-")
-               when ECONOMIC_FUNCTIONAL_AREA_NAME
-                 row["Eco."]
-               when ECONOMIC_CUSTOM_AREA_NAME
-                 row["Eco."]
                else
                  raise "Unknown area name: #{area_name}"
                end
 
-        if code.nil?
+        if code.blank?
           raise "Missing code for #{area_name} in row #{row}"
         end
 
@@ -65,16 +61,8 @@ module GobiertoBudgetsData
           code = "0#{code}"
         end
 
-        # Some sublevels below than 5 can be coerced and grouped to 5 length
-        if code.length > 5
-          code = code[0..4]
-        end
-
-        if code.length == 5
-          code[0..2] + "-" + code[3..-1]
-        else
-          code
-        end
+        # Import only three levels of data
+        return code[0..2]
       end
     end
   end

@@ -87,7 +87,7 @@ module GobiertoBudgetsData
         @code_object = if @area_name == CUSTOM_AREA_NAME
                          # In custom categories the code is composed of custom + economic + functional
                          # but the custom categories imported in the database use just the custom code (left side)
-                         custom_code = @code.split("-").first
+                         custom_code = @code.present? && @code.include?("-") ? @code.split("-").first : @code
                          BudgetLineCode.new(custom_code, { organization_id: @organization_id, area_name: @area_name, kind: @kind })
                        else
                          BudgetLineCode.new(@code)
@@ -121,9 +121,9 @@ module GobiertoBudgetsData
       def area_code
         case @area_name
         when GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_CUSTOM_AREA_NAME
-          [row.field("custom_code"), @code, "c"].join("/")
+          [@custom_code, @code, "c"].join("/")
         when GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_FUNCTIONAL_AREA_NAME
-          [row.field("functional_code"), @code, "f"].join("/")
+          [@functional_code, @code, "f"].join("/")
         else
           @code
         end
