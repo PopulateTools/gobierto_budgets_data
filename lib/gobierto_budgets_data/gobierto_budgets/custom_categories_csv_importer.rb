@@ -16,7 +16,7 @@ module GobiertoBudgetsData
 
         csv.each do |row|
           name_translations = { locale => row.field("name") }
-          kinds.each do |kind|
+          ALL_KINDS.each do |kind|
             category_attrs = {
               site: site,
               area_name: CUSTOM_AREA_NAME,
@@ -38,12 +38,6 @@ module GobiertoBudgetsData
         end
 
         created + updated
-      end
-
-      private
-
-      def kinds
-        [EXPENSE, INCOME]
       end
     end
   end
