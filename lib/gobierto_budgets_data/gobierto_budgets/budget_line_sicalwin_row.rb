@@ -38,6 +38,10 @@ module GobiertoBudgetsData
         @kind ||= row.has_key?("Pro.") ? EXPENSE : INCOME
       end
 
+      def description
+        @description ||= row.field("Descripción")
+      end
+
       def area_code(area_name)
         code = case area_name
                when ECONOMIC_AREA_NAME
