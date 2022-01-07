@@ -213,7 +213,7 @@ module GobiertoBudgetsData
           rows_repository.each do |_, rows_by_area|
             rows_by_area.each do |_, rows_by_area_and_index|
               rows_by_area_and_index.each do |_, budget_line|
-                @budget_lines_imported << budget_line
+                @budget_lines_imported << budget_line if budget_line.amount > 0
               end
             end
           end
