@@ -44,10 +44,13 @@ module GobiertoBudgetsData
                 GobiertoBudgetsData::GobiertoBudgets::ALL_KINDS.each do |kind|
                   category_attrs = {
                     site: site, area_name: GobiertoBudgetsData::GobiertoBudgets::CUSTOM_AREA_NAME,
-                    kind: kind, code: code,
-                    custom_name_translations: {site.configuration.default_locale => row.description}
+                    kind: kind, code: code
                   }
-                  ::GobiertoBudgets::Category.find_or_create_by!(category_attrs)
+                  unless ::GobiertoBudgets::Category.exists?(category_attrs)
+                    ::GobiertoBudgets::Category.create!(category_attrs.merge({
+                      custom_name_translations: {site.configuration.default_locale => row.description}
+                    }))
+                  end
                 end
               end
 
