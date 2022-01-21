@@ -41,6 +41,13 @@ module GobiertoBudgetsData
       ES_INDEX_FORECAST_UPDATED
     ].freeze
 
+    ALL_TYPES = [
+      TOTAL_BUDGET_TYPE,
+      ECONOMIC_BUDGET_TYPE,
+      FUNCTIONAL_BUDGET_TYPE,
+      CUSTOM_BUDGET_TYPE
+    ].freeze
+
     ES_INDEX_EXECUTED_SERIES = "gobierto-budgets-execution-series-v1"
     ES_INDEX_DATA = "data"
     ES_INDEX_INVOICES = "invoices"
