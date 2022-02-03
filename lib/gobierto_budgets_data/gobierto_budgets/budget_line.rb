@@ -3,7 +3,6 @@
 module GobiertoBudgetsData
   module GobiertoBudgets
     class BudgetLine
-
       def self.all(options)
         area_name = options[:area_name]
         updated_forecast = options.delete(:updated_forecast) || false
@@ -69,6 +68,134 @@ module GobiertoBudgetsData
         GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_FORECAST
       end
 
+      attr_reader :code_object, :id, :code, :amount
+
+      def initialize(attributes)
+        @organization_id = attributes[:organization_id]
+        @year = attributes[:year].to_i
+        @code = attributes[:code]
+        @kind = attributes[:kind]
+        # The index could be replaced by the table name when we migrate from ElasticSearch to PostgreSQL
+        @index = attributes[:index]
+        @area_name = attributes[:area_name]
+        @amount = attributes[:amount]
+        # Population can be provided as argument for performance reasons
+        @population = attributes[:population]
+        @custom_code = attributes[:custom_code]
+        @functional_code = attributes[:functional_code]
+
+        @code_object = if @area_name == CUSTOM_AREA_NAME
+                         # In custom categories the code is composed of custom + economic + functional
+                         # but the custom categories imported in the database use just the custom code (left side)
+                         custom_code = @code.present? && @code.include?("-") ? @code.split("-").first : @code
+                         BudgetLineCode.new(custom_code, { organization_id: @organization_id, area_name: @area_name, kind: @kind })
+                       else
+                         BudgetLineCode.new(@code)
+                       end
+
+        # The id might change a bit when the budget line belongs to
+        # economic aggregations (changes implemented in area_code method)
+        @id = [
+          @organization_id,
+          @year,
+          area_code,
+          @kind
+        ].join("/")
+      end
+
+      def amount=(value)
+        @amount = value.to_f.round(2)
+      end
+
+      def data
+        {
+          index: {
+            _index: @index,
+            _id: @id,
+            _type: type,
+            data: budget_line_data
+          }
+        }
+      end
+
+      def area_code
+        case @area_name
+        when GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_CUSTOM_AREA_NAME
+          [@custom_code, @code, "c"].join("/")
+        when GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_FUNCTIONAL_AREA_NAME
+          [@functional_code, @code, "f"].join("/")
+        else
+          @code
+        end
+      end
+
+      private
+
+      def budget_line_data
+        {
+          "organization_id": @organization_id,
+          "ine_code": ine_code,
+          "province_id": province_id,
+          "autonomy_id": autonomy_id,
+          "year": @year,
+          "population": population,
+          "amount": @amount,
+          "code": @code,
+          "level": @code_object.level,
+          "kind": @kind,
+          "amount_per_inhabitant": amount_per_inhabitant,
+          "parent_code": @code_object.parent_code
+        }.merge(economic_code_data)
+      end
+
+      def place
+        @place ||= ::INE::Places::Place.find(@organization_id)
+      end
+
+      def ine_code
+        @ine_code ||= place&.id.try(:to_i)
+      end
+
+      def province_id
+        place&.province&.id.try(:to_i)
+      end
+
+      def autonomy_id
+        place&.province&.autonomous_region&.id.try(:to_i)
+      end
+
+      def population
+        return 100000
+        @population ||= GobiertoBudgetsData::GobiertoBudgets::Population.get(ine_code, @year)
+      end
+
+      def amount_per_inhabitant
+        return 0.0 if population.blank? || population.zero?
+
+        (@amount / population).round(2)
+      end
+
+      def type
+        case @area_name
+        when GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_CUSTOM_AREA_NAME
+          GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME
+        when GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_FUNCTIONAL_AREA_NAME
+          GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME
+        else
+          @area_name
+        end
+      end
+
+      def economic_code_data
+        case @area_name
+        when GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_CUSTOM_AREA_NAME
+          { "custom_code": @custom_code }
+        when GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_FUNCTIONAL_AREA_NAME
+          { "functional_code": @functional_code }
+        else
+          {}
+        end
+      end
     end
   end
 end

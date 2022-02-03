@@ -38,7 +38,9 @@ module GobiertoBudgetsData
       end
 
       def rows
-        @rows ||= csv.map { |row| BudgetLineCsvRow.new(row, thousands_separator: thousands_separator, decimal_separator: decimal_separator) }.reject(&:unavailable_custom_category?)
+        @rows ||= csv.map do |row|
+          BudgetLineCsvRow.new(row, thousands_separator: thousands_separator, decimal_separator: decimal_separator)
+        end.reject(&:unavailable_custom_category?)
       end
 
       def last_level?(code)

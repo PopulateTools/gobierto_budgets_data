@@ -12,6 +12,8 @@ module GobiertoBudgetsData
     ECONOMIC_AREA_NAME = "economic"
     FUNCTIONAL_AREA_NAME = "functional"
     CUSTOM_AREA_NAME = "custom"
+    ECONOMIC_FUNCTIONAL_AREA_NAME = "economic-functional"
+    ECONOMIC_CUSTOM_AREA_NAME = "economic-custom"
 
     ALL_AREAS_NAMES = [
       ECONOMIC_AREA_NAME,
@@ -32,6 +34,13 @@ module GobiertoBudgetsData
     ES_INDEX_FORECAST = "budgets-forecast-v3"
     ES_INDEX_EXECUTED = "budgets-execution-v3"
     ES_INDEX_FORECAST_UPDATED = "budgets-forecast-updated-v1"
+
+    ALL_INDEXES = [
+      ES_INDEX_FORECAST,
+      ES_INDEX_EXECUTED,
+      ES_INDEX_FORECAST_UPDATED
+    ].freeze
+
     ES_INDEX_EXECUTED_SERIES = "gobierto-budgets-execution-series-v1"
     ES_INDEX_DATA = "data"
     ES_INDEX_INVOICES = "invoices"
