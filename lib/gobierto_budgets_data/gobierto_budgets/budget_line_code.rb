@@ -36,6 +36,12 @@ module GobiertoBudgetsData
                    end
       end
 
+      def ancestor_code
+        return OpenStruct.new(code: @custom_category.parent_code, level: 1) if @custom_category
+        return nil unless parent_code.present?
+        return OpenStruct.new(code: code[0], level: 1)
+      end
+
       def parent_code
         return @custom_category.parent_code if @custom_category
         return if level < 2

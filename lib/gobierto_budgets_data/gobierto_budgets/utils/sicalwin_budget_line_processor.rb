@@ -82,17 +82,16 @@ module GobiertoBudgetsData
                   rows_repository[area_name][index][key].amount += amount
 
                   # Parent economic-functional budget lines
-                  economic_code_object.parent_codes.each do |parent_code|
-                    key = "#{code}-#{parent_code.code}"
-                    rows_repository[area_name][index][key] ||= GobiertoBudgetsData::GobiertoBudgets::BudgetLine.new(
-                      common_budget_line_attributes(row).merge({
-                        code: parent_code.code, functional_code: code,
-                        kind: kind, index: index,
-                        area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_FUNCTIONAL_AREA_NAME,
-                      })
-                    )
-                    rows_repository[area_name][index][key].amount += amount
-                  end
+                  parent_code = economic_code_object.ancestor_code
+                  key = "#{code}-#{parent_code.code}"
+                  rows_repository[area_name][index][key] ||= GobiertoBudgetsData::GobiertoBudgets::BudgetLine.new(
+                    common_budget_line_attributes(row).merge({
+                      code: parent_code.code, functional_code: code,
+                      kind: kind, index: index,
+                      area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_FUNCTIONAL_AREA_NAME,
+                    })
+                  )
+                  rows_repository[area_name][index][key].amount += amount
                 end
 
                 # Economic-custom budget lines
@@ -108,17 +107,16 @@ module GobiertoBudgetsData
                   rows_repository[area_name][index][key].amount += amount
 
                   # Parent economic-functional budget lines
-                  economic_code_object.parent_codes.each do |parent_code|
-                    key = "#{code}-#{parent_code.code}"
-                    rows_repository[area_name][index][key] ||= GobiertoBudgetsData::GobiertoBudgets::BudgetLine.new(
-                      common_budget_line_attributes(row).merge({
-                        code: parent_code.code, custom_code: code,
-                        kind: kind, index: index,
-                        area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_CUSTOM_AREA_NAME,
-                      })
-                    )
-                    rows_repository[area_name][index][key].amount += amount
-                  end
+                  parent_code = economic_code_object.ancestor_code
+                  key = "#{code}-#{parent_code.code}"
+                  rows_repository[area_name][index][key] ||= GobiertoBudgetsData::GobiertoBudgets::BudgetLine.new(
+                    common_budget_line_attributes(row).merge({
+                      code: parent_code.code, custom_code: code,
+                      kind: kind, index: index,
+                      area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_CUSTOM_AREA_NAME,
+                    })
+                  )
+                  rows_repository[area_name][index][key].amount += amount
                 end
 
                 # Cumulative parent budget lines
@@ -144,17 +142,16 @@ module GobiertoBudgetsData
                     rows_repository[area_name][index][key].amount += amount
 
                     # Parent economic-functional budget lines of parent budget lines
-                    economic_code_object.parent_codes.each do |economic_parent_code|
-                      key = "#{parent_code.code}-#{economic_parent_code.code}"
-                      rows_repository[area_name][index][key] ||= GobiertoBudgetsData::GobiertoBudgets::BudgetLine.new(
-                        common_budget_line_attributes(row).merge({
-                          code: economic_parent_code.code, functional_code: parent_code.code,
-                          kind: kind, index: index,
-                          area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_FUNCTIONAL_AREA_NAME,
-                        })
-                      )
-                      rows_repository[area_name][index][key].amount += amount
-                    end
+                    economic_parent_code = economic_code_object.ancestor_code
+                    key = "#{parent_code.code}-#{economic_parent_code.code}"
+                    rows_repository[area_name][index][key] ||= GobiertoBudgetsData::GobiertoBudgets::BudgetLine.new(
+                      common_budget_line_attributes(row).merge({
+                        code: economic_parent_code.code, functional_code: parent_code.code,
+                        kind: kind, index: index,
+                        area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_FUNCTIONAL_AREA_NAME,
+                      })
+                    )
+                    rows_repository[area_name][index][key].amount += amount
                   end
 
                   # Economic-custom budget lines of parent budget lines
@@ -170,17 +167,16 @@ module GobiertoBudgetsData
                     rows_repository[area_name][index][key].amount += amount
 
                     # Parent economic-custom budget lines of parent budget lines
-                    economic_code_object.parent_codes.each do |economic_parent_code|
-                      key = "#{parent_code.code}-#{economic_parent_code.code}"
-                      rows_repository[area_name][index][key] ||= GobiertoBudgetsData::GobiertoBudgets::BudgetLine.new(
-                        common_budget_line_attributes(row).merge({
-                          code: economic_parent_code.code, custom_code: parent_code.code,
-                          kind: kind, index: index,
-                          area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_CUSTOM_AREA_NAME,
-                        })
-                      )
-                      rows_repository[area_name][index][key].amount += amount
-                    end
+                    economic_parent_code = economic_code_object.ancestor_code
+                    key = "#{parent_code.code}-#{economic_parent_code.code}"
+                    rows_repository[area_name][index][key] ||= GobiertoBudgetsData::GobiertoBudgets::BudgetLine.new(
+                      common_budget_line_attributes(row).merge({
+                        code: economic_parent_code.code, custom_code: parent_code.code,
+                        kind: kind, index: index,
+                        area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_CUSTOM_AREA_NAME,
+                      })
+                    )
+                    rows_repository[area_name][index][key].amount += amount
                   end
                 end
               end
