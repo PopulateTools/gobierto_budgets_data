@@ -37,15 +37,6 @@ module GobiertoBudgetsData
             rows_repository[area_name] ||= {}
 
             @raw_rows.each do |row|
-              # Skip remanentes rows when the file is expense
-              if kind == GobiertoBudgetsData::GobiertoBudgets::EXPENSE
-                if row.row["Remanentes Incorporados"].present? && row.row["Remanentes Incorporados"].to_f > 0 &&
-                    row.row["Créditos Iniciales"].present? && row.row["Créditos Iniciales"].to_f == 0
-                  puts "Skipping remanentes row: #{row.inspect}"
-                  next
-                end
-              end
-
               code = row.area_code(area_name)
 
               # Import the custom category description using the three parts organic + program + economic
@@ -116,7 +107,7 @@ module GobiertoBudgetsData
                   )
                   rows_repository[area_name][index][key].amount += amount
 
-                  # Parent economic-custom budget lines
+                  # Parent economic-functional budget lines
                   economic_code_object.parent_codes.each do |parent_code|
                     key = "#{code}-#{parent_code.code}"
                     rows_repository[area_name][index][key] ||= GobiertoBudgetsData::GobiertoBudgets::BudgetLine.new(
