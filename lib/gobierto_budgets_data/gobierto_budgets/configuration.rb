@@ -30,6 +30,13 @@ module GobiertoBudgetsData
     DEBT_TYPE  = "debt"
     INVOICE_TYPE = "invoices"
 
+    ALL_TYPES = [
+      TOTAL_BUDGET_TYPE,
+      ECONOMIC_BUDGET_TYPE,
+      FUNCTIONAL_BUDGET_TYPE,
+      CUSTOM_BUDGET_TYPE
+    ].freeze
+
     # Elasticsearch indices
     ES_INDEX_FORECAST = "budgets-forecast-v3"
     ES_INDEX_EXECUTED = "budgets-execution-v3"
