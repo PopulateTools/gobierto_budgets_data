@@ -35,7 +35,7 @@ module GobiertoBudgetsData
               _index: index,
               _id: id,
               _type: type,
-              data: attributes,
+              data: attributes
             }
           )
 
@@ -44,7 +44,7 @@ module GobiertoBudgetsData
             invoices = []
           end
         end
-        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: invoices)
+        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: invoices) if invoices.present?
 
         nitems
       end
