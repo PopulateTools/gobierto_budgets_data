@@ -6,6 +6,7 @@ module GobiertoBudgetsData
       attr_reader :code, :errors
 
       def initialize(code, attrs = {})
+        @errors = {}
         @code = code.to_s.strip
         @custom_category = if attrs[:organization_id].present? && attrs[:kind].present? && attrs[:area_name].present?
                              custom_category = ::GobiertoBudgets::Category.joins(:site).find_by(
@@ -16,12 +17,12 @@ module GobiertoBudgetsData
                              )
 
                              if custom_category.nil?
-                               raise "Custom category not found for code #{@code} and attrs: #{attrs}"
+                               @errors[:missing_custom_category] = @code
+                               puts "Custom category not found for code #{@code} and attrs: #{attrs}" if @code.length > 3
                              end
 
                              custom_category
                            end
-        @errors = {}
       end
 
       def digits
@@ -73,6 +74,8 @@ module GobiertoBudgetsData
         return true if digits == code.tr("-", "").strip
 
         @errors.merge!(code: "\"#{code}\" contains invalid non numeric characters")
+
+        puts @errors
 
         false
       end

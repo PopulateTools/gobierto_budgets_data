@@ -7,6 +7,7 @@ module GobiertoBudgetsData
         def initialize(raw_rows)
           @raw_rows = raw_rows
           @budget_lines_imported = []
+          @errors = 0
         end
 
         # This method processes the Sicalwin rows and creates the different budget lines from each row
@@ -41,7 +42,6 @@ module GobiertoBudgetsData
               if kind == GobiertoBudgetsData::GobiertoBudgets::EXPENSE
                 if row.row["Remanentes Incorporados"].present? && row.row["Remanentes Incorporados"].to_f > 0 &&
                     row.row["Créditos Iniciales"].present? && row.row["Créditos Iniciales"].to_f == 0
-                  puts "Skipping remanentes row: #{row.inspect}"
                   next
                 end
               end
@@ -51,10 +51,8 @@ module GobiertoBudgetsData
               # Import the custom category description using the three parts organic + program + economic
               if area_name == GobiertoBudgetsData::GobiertoBudgets::CUSTOM_AREA_NAME
                 GobiertoBudgetsData::GobiertoBudgets::ALL_KINDS.each do |kind|
-                  category_attrs = {
-                    site: site, area_name: GobiertoBudgetsData::GobiertoBudgets::CUSTOM_AREA_NAME,
-                    kind: kind, code: code
-                  }
+                  category_attrs = { site: site, area_name: GobiertoBudgetsData::GobiertoBudgets::CUSTOM_AREA_NAME, kind: kind, code: code }
+
                   unless ::GobiertoBudgets::Category.exists?(category_attrs)
                     ::GobiertoBudgets::Category.create!(category_attrs.merge({
                       custom_name_translations: {site.configuration.default_locale => row.description}
@@ -76,7 +74,11 @@ module GobiertoBudgetsData
                     index: index, area_name: area_name,
                   })
                 )
-                rows_repository[area_name][index][code].amount += amount
+                if rows_repository[area_name][index][code].valid?
+                  rows_repository[area_name][index][code].amount += amount
+                else
+                  @errors += 1
+                end
 
                 # Economic-functional budget lines
                 if area_name == GobiertoBudgetsData::GobiertoBudgets::FUNCTIONAL_AREA_NAME
@@ -88,7 +90,11 @@ module GobiertoBudgetsData
                       area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_FUNCTIONAL_AREA_NAME,
                     })
                   )
-                  rows_repository[area_name][index][key].amount += amount
+                  if rows_repository[area_name][index][key].valid?
+                    rows_repository[area_name][index][key].amount += amount
+                  else
+                    @errors += 1
+                  end
 
                   # Parent economic-functional budget lines
                   parent_code = economic_code_object.ancestor_code
@@ -100,7 +106,12 @@ module GobiertoBudgetsData
                       area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_FUNCTIONAL_AREA_NAME,
                     })
                   )
-                  rows_repository[area_name][index][key].amount += amount
+
+                  if rows_repository[area_name][index][key].valid?
+                    rows_repository[area_name][index][key].amount += amount
+                  else
+                    @errors += 1
+                  end
                 end
 
                 # Economic-custom budget lines
@@ -113,7 +124,12 @@ module GobiertoBudgetsData
                       area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_CUSTOM_AREA_NAME,
                     })
                   )
-                  rows_repository[area_name][index][key].amount += amount
+
+                  if rows_repository[area_name][index][key].valid?
+                    rows_repository[area_name][index][key].amount += amount
+                  else
+                    @errors += 1
+                  end
 
                   # Parent economic-functional budget lines
                   parent_code = economic_code_object.ancestor_code
@@ -125,7 +141,11 @@ module GobiertoBudgetsData
                       area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_CUSTOM_AREA_NAME,
                     })
                   )
-                  rows_repository[area_name][index][key].amount += amount
+                  if rows_repository[area_name][index][key].valid?
+                    rows_repository[area_name][index][key].amount += amount
+                  else
+                    @errors += 1
+                  end
                 end
 
                 # Cumulative parent budget lines
@@ -136,7 +156,12 @@ module GobiertoBudgetsData
                       index: index, area_name: area_name,
                     })
                   )
-                  rows_repository[area_name][index][parent_code.code].amount += amount
+                  if rows_repository[area_name][index][parent_code.code].valid?
+                    rows_repository[area_name][index][parent_code.code].amount += amount
+                  else
+                    @errors += 1
+                  end
+
 
                   # Economic-functional budget lines of parent budget lines
                   if area_name == GobiertoBudgetsData::GobiertoBudgets::FUNCTIONAL_AREA_NAME
@@ -148,7 +173,11 @@ module GobiertoBudgetsData
                         area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_FUNCTIONAL_AREA_NAME,
                       })
                     )
-                    rows_repository[area_name][index][key].amount += amount
+                    if rows_repository[area_name][index][key].valid?
+                      rows_repository[area_name][index][key].amount += amount
+                    else
+                      @errors += 1
+                    end
 
                     # Parent economic-functional budget lines of parent budget lines
                     economic_parent_code = economic_code_object.ancestor_code
@@ -160,7 +189,12 @@ module GobiertoBudgetsData
                         area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_FUNCTIONAL_AREA_NAME,
                       })
                     )
-                    rows_repository[area_name][index][key].amount += amount
+                    rows_repository[area_name][index][key].amount += amount if rows_repository[area_name][index][key].valid?
+                    if rows_repository[area_name][index][key].valid?
+                      rows_repository[area_name][index][key].amount += amount
+                    else
+                      @errors += 1
+                    end
                   end
 
                   # Economic-custom budget lines of parent budget lines
@@ -173,7 +207,11 @@ module GobiertoBudgetsData
                         area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_CUSTOM_AREA_NAME,
                       })
                     )
-                    rows_repository[area_name][index][key].amount += amount
+                    if rows_repository[area_name][index][key].valid?
+                      rows_repository[area_name][index][key].amount += amount
+                    else
+                      @errors += 1
+                    end
 
                     # Parent economic-custom budget lines of parent budget lines
                     economic_parent_code = economic_code_object.ancestor_code
@@ -185,12 +223,20 @@ module GobiertoBudgetsData
                         area_name: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_CUSTOM_AREA_NAME,
                       })
                     )
-                    rows_repository[area_name][index][key].amount += amount
+                    if rows_repository[area_name][index][key].valid?
+                      rows_repository[area_name][index][key].amount += amount
+                    else
+                      @errors += 1
+                    end
                   end
                 end
               end
             end
           end
+
+          puts "Number of errors: #{@errors}"
+
+          return [] unless @errors.zero?
 
           rows_repository.each do |_, rows_by_area|
             rows_by_area.each do |_, rows_by_area_and_index|

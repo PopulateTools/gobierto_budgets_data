@@ -129,6 +129,10 @@ module GobiertoBudgetsData
         end
       end
 
+      def valid?
+        @code_object.valid?
+      end
+
       private
 
       def budget_line_data
