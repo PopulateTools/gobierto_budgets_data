@@ -31,7 +31,7 @@ module GobiertoBudgetsData
       end
 
       def date
-        @date ||= Date.strptime(row.field("date"), pick_date_format(row.field("date"))
+        @date ||= Date.strptime(row.field("date"), pick_date_format(row.field("date")))
       rescue Date::Error
         @errors.merge!(date: "Invalid date #{row.field("date")}")
       end
@@ -65,7 +65,7 @@ module GobiertoBudgetsData
       def payment_date
         return unless row.field("payment_date").present?
 
-        Date.strptime(row.field("payment_date"), pick_date_format(row.field("payment_date"))
+        Date.strptime(row.field("payment_date"), pick_date_format(row.field("payment_date")))
       rescue Date::Error
         @errors.merge!(payment_date: "Invalid date #{row.field("payment_date")}")
       end
