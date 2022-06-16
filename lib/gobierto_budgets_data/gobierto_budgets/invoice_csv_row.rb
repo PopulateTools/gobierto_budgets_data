@@ -7,6 +7,8 @@ module GobiertoBudgetsData
     class InvoiceCsvRow
       DNI_REGEX = /\A\d{8}[A-Z]/i
       NIE_REGEX = /\A[A-Z]\d{7}[A-Z]/i
+      FORMAT_ES = "%d/%m/%Y"
+      FORMAT_INT = "%Y-%m-%d"
 
       attr_reader :row, :errors
 
@@ -29,7 +31,7 @@ module GobiertoBudgetsData
       end
 
       def date
-        @date ||= Date.strptime(row.field("date"), "%Y-%m-%d")
+        @date ||= Date.strptime(row.field("date"), pick_date_format(row.field("date"))
       rescue Date::Error
         @errors.merge!(date: "Invalid date #{row.field("date")}")
       end
@@ -63,7 +65,7 @@ module GobiertoBudgetsData
       def payment_date
         return unless row.field("payment_date").present?
 
-        Date.strptime(row.field("payment_date"), "%Y-%m-%d")
+        Date.strptime(row.field("payment_date"), pick_date_format(row.field("payment_date"))
       rescue Date::Error
         @errors.merge!(payment_date: "Invalid date #{row.field("payment_date")}")
       end
@@ -150,6 +152,13 @@ module GobiertoBudgetsData
         end
 
         @errors.blank?
+      end
+
+      def pick_date_format(date)
+        date = date.to_s
+        return FORMAT_INT if date.blank?
+
+        date.include?("/") ? FORMAT_ES : FORMAT_INT
       end
     end
   end
