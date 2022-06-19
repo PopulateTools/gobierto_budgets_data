@@ -20,6 +20,8 @@ module GobiertoBudgetsData
         invoices = []
         nitems = 0
         data.each do |attributes|
+          next if attributes["date"].blank?
+
           nitems += 1
           date = Date.parse(attributes["date"])
           id = [attributes["location_id"], date.year, Digest::MD5.hexdigest(attributes["invoice_id"])].join('/')
