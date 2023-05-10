@@ -31,7 +31,7 @@ module GobiertoBudgetsData
 
       def load_raw_rows
         @csv.map do |row|
-          if row.field("Org.").present? && row.field("Eco.").present?
+          if row.field("Eco.").present?
             BudgetLineSicalwinRow.new(row, year: @year, organization_id: @organization_id)
           end
         end.compact
