@@ -3,7 +3,7 @@
 module GobiertoBudgetsData
   module GobiertoBudgets
     class BudgetLineSicalwinRow
-      INDEXES_COLUMNS_NAMES_MAPPING = {
+      INDEXES_COLUMNS_NAMES_MAPPING_ES = {
         EXPENSE => {
           ES_INDEX_FORECAST => "Créditos Iniciales",
           ES_INDEX_FORECAST_UPDATED => "Créditos Totales consignados",
@@ -16,6 +16,20 @@ module GobiertoBudgetsData
         }
       }.freeze
 
+      INDEXES_COLUMNS_NAMES_MAPPING_CA = {
+        EXPENSE => {
+          ES_INDEX_FORECAST => "Crèdits inicials",
+          ES_INDEX_FORECAST_UPDATED => "Crèdits totals consignats",
+          ES_INDEX_EXECUTED => "Obligacions reconegudes"
+        },
+        INCOME => {
+          ES_INDEX_FORECAST => "Previsions inicials",
+          ES_INDEX_FORECAST_UPDATED => "Previsions totals",
+          ES_INDEX_EXECUTED => "Drets Reconeguts nets"
+        }
+      }.freeze
+
+
       attr_reader :row, :year, :organization_id
 
       def initialize(row, options = {})
@@ -27,7 +41,9 @@ module GobiertoBudgetsData
       end
 
       def amount(index)
-        raw_value = row.field(INDEXES_COLUMNS_NAMES_MAPPING[kind][index])
+        column_name_es = INDEXES_COLUMNS_NAMES_MAPPING_ES[kind][index]
+        column_name_ca = INDEXES_COLUMNS_NAMES_MAPPING_CA[kind][index]
+        raw_value = row.has_key?(column_name_es) ? row.field(column_name_es) : row.field(column_name_ca)
         return raw_value if raw_value.is_a? Numeric
         return 0.0 unless raw_value.is_a? String
 
@@ -39,7 +55,7 @@ module GobiertoBudgetsData
       end
 
       def description
-        @description ||= row.field("Descripción")
+        @description ||= row.has_key?("Descripción") ? row.field("Descripción") : row.field("Descripció")
       end
 
       def area_code(area_name)
@@ -60,7 +76,6 @@ module GobiertoBudgetsData
 
         return code if area_name == CUSTOM_AREA_NAME
 
-        # The CSV format removes leading zeros
         if code.length == 4
           code = "0#{code}"
         end
