@@ -25,7 +25,7 @@ module GobiertoBudgetsData
         INCOME => {
           ES_INDEX_FORECAST => "Previsions inicials",
           ES_INDEX_FORECAST_UPDATED => "Previsions totals",
-          ES_INDEX_EXECUTED => "Drets Reconeguts nets"
+          ES_INDEX_EXECUTED => "Drets reconeguts nets"
         }
       }.freeze
 
