@@ -76,9 +76,11 @@ module GobiertoBudgetsData
 
         return code if area_name == CUSTOM_AREA_NAME
 
-        if code.length == 4
-          code = "0#{code}"
-        end
+        # This specific rule was added for the case of Dip. Huelva
+        # It might require to re-adjust the data
+        # if code.length == 4
+        #   code = "0#{code}"
+        # end
 
         # Import only three levels of data
         return code[0..2]

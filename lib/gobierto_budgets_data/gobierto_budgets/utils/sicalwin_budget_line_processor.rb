@@ -162,7 +162,6 @@ module GobiertoBudgetsData
                     @errors += 1
                   end
 
-
                   # Economic-functional budget lines of parent budget lines
                   if area_name == GobiertoBudgetsData::GobiertoBudgets::FUNCTIONAL_AREA_NAME
                     key = "#{parent_code.code}-#{economic_code}"
