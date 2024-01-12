@@ -34,6 +34,8 @@ module GobiertoBudgetsData
       end
 
       def build_data_file
+        return if max_year_level.blank?
+
         expense_lines[max_year_level].group_by(&:code).each do |code, lines|
           fill_data_for(code, lines, GobiertoBudgetsData::GobiertoBudgets::EXPENSE, @expense_lines_area_name)
         end
@@ -48,7 +50,7 @@ module GobiertoBudgetsData
                               expense_max_years = expense_lines.transform_values { |lines| lines.map(&:year).max }
                               income_max_years = income_lines.transform_values { |lines| lines.map(&:year).max }
 
-                              max_years = expense_max_years.merge(income_max_years) { |_k, v1, v2| [v1, v2].max  }
+                              max_years = expense_max_years.merge(income_max_years) { |_k, v1, v2| [v1, v2].max }.compact_blank
                               max_year = max_years.values.max
 
                               max_years.select { |k, v| v == max_year }.keys.max
@@ -72,9 +74,9 @@ module GobiertoBudgetsData
                                end
                              end
 
-                             max_years_by_area = data_by_area.transform_values{|r| r.transform_values { |lines| lines.map(&:year).max }.values.max }
+                             max_years_by_area = data_by_area.transform_values { |r| r.transform_values { |lines| lines.map(&:year).compact.max }.values.compact.max }.compact_blank
                              max_year = max_years_by_area.values.max
-                             @expense_lines_area_name = max_years_by_area.select { |_area_name, year| year == max_year }.keys.first
+                             @expense_lines_area_name = max_years_by_area.select { |_area_name, year| year == max_year }.keys.first || GobiertoBudgetsData::GobiertoBudgets::FUNCTIONAL_AREA_NAME
                              data_by_area[@expense_lines_area_name]
                            end
       end
