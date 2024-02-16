@@ -51,7 +51,7 @@ module GobiertoBudgetsData
                               income_max_years = income_lines.transform_values { |lines| lines.map(&:year).max }
 
                               max_years = expense_max_years.merge(income_max_years) { |_k, v1, v2| [v1, v2].max }.compact_blank
-                              max_year = max_years.values.max
+                              max_year = max_years.values.compact.max
 
                               max_years.select { |k, v| v == max_year }.keys.max
                             end
