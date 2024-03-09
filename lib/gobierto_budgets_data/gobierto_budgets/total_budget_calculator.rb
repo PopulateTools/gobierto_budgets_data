@@ -50,7 +50,7 @@ module GobiertoBudgetsData
         total_budget, total_budget_per_inhabitant = get_data(index, organization_id, year, kind)
 
         if total_budget == 0.0 && kind == GobiertoBudgetsData::GobiertoBudgets::EXPENSE
-          total_budget, total_budget_per_inhabitant = get_data(index, organization_id, year, kind, GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME)
+          total_budget, total_budget_per_inhabitant = get_data(index, organization_id, year, kind, GobiertoBudgetsData::GobiertoBudgets::FUNCTIONAL_AREA_NAME)
         end
 
         data = place_attributes.merge(
@@ -99,7 +99,7 @@ module GobiertoBudgetsData
           size: 10_000
         }
 
-        type ||= (kind == GobiertoBudgetsData::GobiertoBudgets::EXPENSE) ? GobiertoBudgetsData::GobiertoBudgets::FUNCTIONAL_AREA_NAME : GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME
+        type = GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME
 
         result = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.search(
           index: index,
