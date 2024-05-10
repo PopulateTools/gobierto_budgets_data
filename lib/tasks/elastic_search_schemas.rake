@@ -89,7 +89,7 @@ namespace :gobierto_budgets do
               index: { max_result_window: 100_000 }
             }
           }
-          if index == GobiertoBudgets::SearchEngineConfiguration::Invoice.index
+          if index == GobiertoBudgetsData::GobiertoBudgets::SearchEngineConfiguration::Invoice.index
             create_invoices_mapping(index)
           else
             create_budgets_mapping(index)
