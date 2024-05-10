@@ -38,9 +38,9 @@ module GobiertoBudgetsData
     ].freeze
 
     # Elasticsearch indices
-    ES_INDEX_FORECAST = "budgets-forecast-v3"
-    ES_INDEX_EXECUTED = "budgets-execution-v3"
-    ES_INDEX_FORECAST_UPDATED = "budgets-forecast-updated-v1"
+    ES_INDEX_FORECAST = "budgets-forecast"
+    ES_INDEX_EXECUTED = "budgets-execution"
+    ES_INDEX_FORECAST_UPDATED = "budgets-forecast-updated"
 
     ALL_INDEXES = [
       ES_INDEX_FORECAST,
@@ -48,7 +48,6 @@ module GobiertoBudgetsData
       ES_INDEX_FORECAST_UPDATED
     ].freeze
 
-    ES_INDEX_EXECUTED_SERIES = "gobierto-budgets-execution-series-v1"
     ES_INDEX_DATA = "data"
     ES_INDEX_INVOICES = "invoices"
   end
