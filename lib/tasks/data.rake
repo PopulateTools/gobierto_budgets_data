@@ -11,7 +11,7 @@ namespace :gobierto_budgets_data do
   namespace :data do
     def create_data_mapping(index)
       m = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.get_mapping index: index
-      return unless m["data"]["mappings"].blank?
+      return unless m[index]["mappings"].blank?
 
       # Document identifier: <ine_code>/<year>/<type>
       #

@@ -39,3 +39,4 @@ require_relative "gobierto_budgets_data/gobierto_budgets/search_engine_configura
 require_relative "gobierto_budgets_data/gobierto_budgets/search_engine_configuration/invoice"
 require_relative "gobierto_budgets_data/gobierto_budgets/search_engine_configuration/total_budget"
 require_relative "gobierto_budgets_data/gobierto_budgets/search_engine_configuration/year"
+require_relative "gobierto_budgets_data/gobierto_budgets/place_decorator"

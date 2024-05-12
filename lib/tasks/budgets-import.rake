@@ -1,4 +1,4 @@
-namespace :gobierto_budgets do
+namespace :gobierto_budgets_data do
   namespace :budgets do
     def create_db_connection(db_name)
       ActiveRecord::Base.establish_connection ActiveRecord::Base.configurations[Rails.env].merge('database' => db_name)
@@ -21,7 +21,7 @@ namespace :gobierto_budgets do
       db = create_db_connection(db_name)
 
       places_key = opts.fetch(:place_type, :ine)
-      places = PlaceDecorator.collection(places_key)
+      places = GobiertoBudgetsData::GobiertoBudgets::PlaceDecorator.collection(places_key)
 
       places.each do |place|
         place.attributes.each do |key, value|
@@ -116,7 +116,7 @@ SQL
       db = create_db_connection(db_name)
 
       places_key = opts.fetch(:place_type, :ine)
-      places = PlaceDecorator.collection(places_key)
+      places = GobiertoBudgetsData::GobiertoBudgets::PlaceDecorator.collection(places_key)
 
       places.each do |place|
         place.attributes.each do |key, value|

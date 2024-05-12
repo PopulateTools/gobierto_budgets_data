@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-namespace :gobierto_budgets do
+namespace :gobierto_budgets_data do
   namespace :elastic_search_schemas do
     def indexes
       GobiertoBudgetsData::GobiertoBudgets::SearchEngineConfiguration::BudgetLine.all_indices +
@@ -9,7 +9,7 @@ namespace :gobierto_budgets do
 
     def create_invoices_mapping(index)
       m = GobiertoBudgets::SearchEngine.client.indices.get_mapping index: index
-      return unless m["data"]["mappings"].blank?
+      return unless m[index]["mappings"].blank?
 
       puts "  - Creating #{index}"
       GobiertoBudgets::SearchEngine.client.indices.put_mapping index: index, body: {
@@ -34,7 +34,7 @@ namespace :gobierto_budgets do
 
     def create_budgets_mapping(index)
       m = GobiertoBudgets::SearchEngine.client.indices.get_mapping index: index
-      return unless m["data"]["mappings"].blank?
+      return unless m[index]["mappings"].blank?
 
       puts "  - Creating #{index}"
       # BUDGETS_INDEX: budgets-forecast // budgets-execution
