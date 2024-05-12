@@ -27,6 +27,8 @@ module GobiertoBudgetsData
     FUNCTIONAL_BUDGET_TYPE = FUNCTIONAL_AREA_NAME
     CUSTOM_BUDGET_TYPE = CUSTOM_AREA_NAME
     POPULATION_TYPE  = "population"
+    POPULATION_PROVINCE_TYPE  = "population-province"
+    POPULATION_AUTONOMY_TYPE  = "population-autonomy"
     DEBT_TYPE  = "debt"
     INVOICE_TYPE = "invoices"
 
