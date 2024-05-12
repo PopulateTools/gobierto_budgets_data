@@ -55,38 +55,38 @@ namespace :gobierto_budgets_data do
 
     desc 'Reset ElasticSearch data index'
     task :reset => :environment do
-      if GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA_DEBT
-        puts "- Deleting #{ES_INDEX_DATA_DEBT} index"
-        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.indices.delete index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA_DEBT
+      if GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA
+        puts "- Deleting #{GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA} index"
+        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.indices.delete index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA
       end
 
-      if GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA_POPULATION
-        puts "- Deleting #{ES_INDEX_DATA_POPULATION} index"
-        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.indices.delete index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA_POPULATION
+      if GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA
+        puts "- Deleting #{GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA} index"
+        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.indices.delete index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA
       end
     end
 
     desc 'Create mappings for data index'
     task :create => :environment do
-      unless GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA_DEBT
-        puts "- Creating index #{ES_INDEX_DATA_DEBT}"
-        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.indices.create index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA_DEBT, body: {
+      unless GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA
+        puts "- Creating index #{GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA}"
+        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.indices.create index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA, body: {
           settings: { index: { max_result_window: 100_000 } }
         }
       end
 
-      unless GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA_POPULATION
-        puts "- Creating index #{ES_INDEX_DATA_POPULATION}"
-        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.indices.create index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA_POPULATION, body: {
+      unless GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.indices.exists? index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA
+        puts "- Creating index #{GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA}"
+        GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.indices.create index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA, body: {
           settings: { index: { max_result_window: 100_000 } }
         }
       end
 
-      puts "- Creating #{GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA_DEBT}"
-      create_debt_mapping(GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA_DEBT)
+      puts "- Creating #{GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA}"
+      create_debt_mapping(GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA)
 
-      puts "- Creating #{GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA_POPULATION}"
-      create_population_mapping(GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA_POPULATION)
+      puts "- Creating #{GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA}"
+      create_population_mapping(GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA)
     end
   end
 end
