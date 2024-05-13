@@ -75,7 +75,7 @@ SQL
             type: GobiertoBudgetsData::GobiertoBudgets::FUNCTIONAL_BUDGET_TYPE
           })
 
-          id = [place.id,destination_year,code,'G'].join("/")
+          id = [place.id,destination_year,code,'G',GobiertoBudgetsData::GobiertoBudgets::FUNCTIONAL_BUDGET_TYPE].join("/")
           index_request_body << {index: {_id: id, data: data}}
         end
         next if index_request_body.empty?
@@ -103,7 +103,7 @@ SQL
             type: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_BUDGET_TYPE
           })
 
-          id = [place.id,destination_year,"#{code}-#{functional_code}",'G'].join("/")
+          id = [place.id,destination_year,"#{code}-#{functional_code}",'G',GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_BUDGET_TYPE].join("/")
           index_request_body << {index: {_id: id, data: data}}
         end
         next if index_request_body.empty?
@@ -176,7 +176,7 @@ SQL
             parent_code: parent_code
           })
 
-          id = [place.id,destination_year,code,row['kind']].join("/")
+          id = [place.id,destination_year,code,row['kind'],GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_BUDGET_TYPE].join("/")
           index_request_body << {index: {_id: id, data: data}}
         end
         next if index_request_body.empty?
