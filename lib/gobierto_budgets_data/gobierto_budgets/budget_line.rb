@@ -15,7 +15,7 @@ module GobiertoBudgetsData
         permitted_terms.each do |term_key|
           terms << build_term(term_key, options[term_key]) if options[term_key]
         end
-        terms << { build_term(:type, area_name) }
+        terms << build_term(type, area_name)
 
         query = {
           query: {
