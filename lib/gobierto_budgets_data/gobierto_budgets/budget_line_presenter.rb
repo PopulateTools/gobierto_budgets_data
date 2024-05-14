@@ -9,7 +9,7 @@ module GobiertoBudgetsData
       end
 
       def id
-        @attributes.values_at(:organization_id, :year, :code, :kind, :area_name).join("/")
+        @attributes.values_at(:organization_id, :year, :code, :kind, :area_name, :type).join("/")
       end
 
       def amount
@@ -24,10 +24,12 @@ module GobiertoBudgetsData
         @attributes
       end
 
+      # TODO: might change to @attributes[:amount]
       def total
         @attributes[:total]
       end
 
+      # TODO: might change to @attributes[:amount_per_inhabitant]
       def total_per_inhabitant
         @attributes[:total_budget_per_inhabitant]
       end
