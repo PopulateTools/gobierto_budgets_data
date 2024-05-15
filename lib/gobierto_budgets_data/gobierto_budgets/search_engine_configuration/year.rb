@@ -41,7 +41,7 @@ module GobiertoBudgetsData
 
         def self.last_year_with_data
           (DEFAULT_LAST_YEAR_WITH_DATA + 1).downto(first) do |year|
-            if GobiertoBudgets::BudgetLine.any_data?(site: current_site, index: ::GobiertoBudgets::SearchEngineConfiguration::BudgetLine.index_forecast, year: year)
+            if ::GobiertoBudgets::BudgetLine.any_data?(site: current_site, index: GobiertoBudgetsData::GobiertoBudgets::SearchEngineConfiguration::BudgetLine.index_forecast, year: year)
               return year
             end
           end

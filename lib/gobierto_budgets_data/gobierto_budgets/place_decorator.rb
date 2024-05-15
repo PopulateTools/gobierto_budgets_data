@@ -61,9 +61,9 @@ module GobiertoBudgetsData
       end
 
       def self.population_type_index(places_collection_key)
-        return GobiertoBudgets::SearchEngineConfiguration::Data.type_population_province if places_collection_key&.to_sym == :deputation_eu
+        return GobiertoBudgetsData::GobiertoBudgets::SearchEngineConfiguration::Data.type_population_province if places_collection_key&.to_sym == :deputation_eu
 
-        GobiertoBudgets::SearchEngineConfiguration::Data.type_population
+        GobiertoBudgetsData::GobiertoBudgets::SearchEngineConfiguration::Data.type_population
       end
 
       def self.place_type(key)
