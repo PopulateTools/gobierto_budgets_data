@@ -23,7 +23,7 @@ module GobiertoBudgetsData
             all_items
           end
 
-          @all_items[I18n.locale][area_name]
+          @all_items[I18n.locale][area_name] || {"G" => {}, "I" => {}}
         end
 
       end
