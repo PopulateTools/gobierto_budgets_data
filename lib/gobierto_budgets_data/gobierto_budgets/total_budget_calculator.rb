@@ -100,8 +100,8 @@ module GobiertoBudgetsData
         )
 
         [
-          result['hits']['hits'].sum{ |h| h['_source']['total_budget'].to_f.round(2) },
-          result['hits']['hits'].sum{ |h| h['_source']['total_budget_per_inhabitant'].to_f.round(2) }
+          result['hits']['hits'].sum{ |h| h['_source']['amount'].to_f.round(2) },
+          result['hits']['hits'].sum{ |h| h['_source']['amount_per_inhabitant'].to_f.round(2) }
         ]
       end
 
