@@ -79,9 +79,11 @@ module GobiertoBudgetsData
                 { term: { level: 1 } },
                 { term: { kind: kind } },
                 { term: { year: year } },
-                { term: { type: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME } },
-                { missing: { field: "functional_code" } },
-                { missing: { field: "custom_code" } }
+                { term: { type: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME } }
+              ],
+              must_not: [
+                { exists: { field: "functional_code" } },
+                { exists: { field: "custom_code" } }
               ]
             }
           },
