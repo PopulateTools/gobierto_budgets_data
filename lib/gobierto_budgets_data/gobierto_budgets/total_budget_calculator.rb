@@ -73,23 +73,16 @@ module GobiertoBudgetsData
       def get_data(index, organization_id, year, kind, type = nil)
         query = {
           query: {
-            filtered: {
-              query: {
-                match_all: {}
-              },
-              filter: {
-                bool: {
-                  must: [
-                    { term: { organization_id: organization_id } },
-                    { term: { level: 1 } },
-                    { term: { kind: kind } },
-                    { term: { year: year } },
-                    { term: { type: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME } },
-                    { missing: { field: "functional_code" } },
-                    { missing: { field: "custom_code" } }
-                  ]
-                }
-              }
+            bool: {
+              must: [
+                { term: { organization_id: organization_id } },
+                { term: { level: 1 } },
+                { term: { kind: kind } },
+                { term: { year: year } },
+                { term: { type: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME } },
+                { missing: { field: "functional_code" } },
+                { missing: { field: "custom_code" } }
+              ]
             }
           },
           aggs: {
@@ -105,8 +98,8 @@ module GobiertoBudgetsData
         )
 
         [
-          result['hits']['hits'].sum{ |h| h['_source']['amount'].to_f.round(2) },
-          result['hits']['hits'].sum{ |h| h['_source']['amount_per_inhabitant'].to_f.round(2) }
+          result['hits']['hits'].sum{ |h| h['_source']['total_budget'].to_f.round(2) },
+          result['hits']['hits'].sum{ |h| h['_source']['total_budget_per_inhabitant'].to_f.round(2) }
         ]
       end
 
