@@ -122,7 +122,7 @@ module GobiertoBudgetsData
           payment_date: date_string(payment_date),
           paid: paid,
           economic_budget_line_code: economic_budget_line_code,
-          functional_budget_line_code: functional_budget_line_code
+          functional_budget_line_code: functional_budget_line_code,
         }.merge(
           location_attributes
         )
@@ -133,7 +133,6 @@ module GobiertoBudgetsData
           index: {
             _index: ES_INDEX_INVOICES,
             _id: id,
-            _type: INVOICE_TYPE,
             data: attributes
           }
         }

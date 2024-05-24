@@ -7,24 +7,22 @@ module GobiertoBudgetsData
         area_name = options[:area_name]
         updated_forecast = options.delete(:updated_forecast) || false
 
-        terms = [
-          { missing: { field: "functional_code"} },
-          { missing: { field: "custom_code"} }
+        must_not_terms = [
+          { exists: { field: "functional_code"} },
+          { exists: { field: "custom_code"} }
         ]
 
+        terms = []
         permitted_terms.each do |term_key|
           terms << build_term(term_key, options[term_key]) if options[term_key]
         end
+        terms << build_term(:type, area_name)
 
         query = {
           query: {
-            filtered: {
-              filter: {
-                bool: {
-                  must: terms
-                }
-              }
-            }
+            bool: {
+              must: terms
+            }.merge(must_not_terms.any? ? { must_not: must_not_terms } : {})
           },
           aggs: {
             total_budget: { sum: { field: "amount" } },
@@ -39,10 +37,10 @@ module GobiertoBudgetsData
                   default_index
                 end
 
-        response = SearchEngine.client.search(index: index, type: area_name, body: query)
+        response = SearchEngine.client.search(index: index, body: query)
 
         if updated_forecast && response["hits"]["hits"].empty?
-          response = SearchEngine.client.search(index: default_index, type: area_name, body: query)
+          response = SearchEngine.client.search(index: default_index, body: query)
         end
 
         response["hits"]["hits"].map{ |h| h["_source"] }.map do |row|
@@ -99,7 +97,8 @@ module GobiertoBudgetsData
           @organization_id,
           @year,
           area_code,
-          @kind
+          @kind,
+          type,
         ].join("/")
       end
 
@@ -112,7 +111,6 @@ module GobiertoBudgetsData
           index: {
             _index: @index,
             _id: @id,
-            _type: type,
             data: budget_line_data
           }
         }
@@ -148,7 +146,8 @@ module GobiertoBudgetsData
           "level": @code_object.level,
           "kind": @kind,
           "amount_per_inhabitant": amount_per_inhabitant,
-          "parent_code": @code_object.parent_code
+          "parent_code": @code_object.parent_code,
+          "type": type,
         }.merge(economic_code_data)
       end
 
@@ -169,7 +168,6 @@ module GobiertoBudgetsData
       end
 
       def population
-        return 100000
         @population ||= GobiertoBudgetsData::GobiertoBudgets::Population.get(ine_code, @year)
       end
 

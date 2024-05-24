@@ -7,11 +7,10 @@ module GobiertoBudgetsData
     class InvoicesImporter
       def initialize(options)
         @index = GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_INVOICES
-        @type = GobiertoBudgetsData::GobiertoBudgets::INVOICE_TYPE
         @data = options.fetch(:data)
       end
 
-      attr_reader :index, :data, :type
+      attr_reader :index, :data
 
       DNI_REGEX = /^(\d{8})([A-Z])$/i.freeze
       NIE_REGEX = /^[XYZ]\d{7,8}[A-Z]$/i.freeze
@@ -36,7 +35,6 @@ module GobiertoBudgetsData
             index: {
               _index: index,
               _id: id,
-              _type: type,
               data: attributes
             }
           )

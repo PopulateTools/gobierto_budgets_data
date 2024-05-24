@@ -57,15 +57,14 @@ module GobiertoBudgetsData
           organization_id: organization_id,
           year: year,
           kind: kind,
-          total_budget: total_budget.to_f,
-          total_budget_per_inhabitant: total_budget_per_inhabitant.to_f
+          amount: total_budget.to_f,
+          amount_per_inhabitant: total_budget_per_inhabitant.to_f
         )
 
-        id = [organization_id, year, kind].join("/")
+        id = [organization_id, year, kind, GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE ].join("/")
 
         GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.index(
           index: index,
-          type: GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE,
           id: id,
           body: data
         )
@@ -74,22 +73,18 @@ module GobiertoBudgetsData
       def get_data(index, organization_id, year, kind, type = nil)
         query = {
           query: {
-            filtered: {
-              query: {
-                match_all: {}
-              },
-              filter: {
-                bool: {
-                  must: [
-                    { term: { organization_id: organization_id } },
-                    { term: { level: 1 } },
-                    { term: { kind: kind } },
-                    { term: { year: year } },
-                    { missing: { field: "functional_code" } },
-                    { missing: { field: "custom_code" } }
-                  ]
-                }
-              }
+            bool: {
+              must: [
+                { term: { organization_id: organization_id } },
+                { term: { level: 1 } },
+                { term: { kind: kind } },
+                { term: { year: year } },
+                { term: { type: GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME } }
+              ],
+              must_not: [
+                { exists: { field: "functional_code" } },
+                { exists: { field: "custom_code" } }
+              ]
             }
           },
           aggs: {
@@ -99,11 +94,8 @@ module GobiertoBudgetsData
           size: 10_000
         }
 
-        type = GobiertoBudgetsData::GobiertoBudgets::ECONOMIC_AREA_NAME
-
         result = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.search(
           index: index,
-          type: type,
           body: query
         )
 
@@ -119,7 +111,8 @@ module GobiertoBudgetsData
         body = {
           query: {
             match: {
-              organization_id: organization_id
+              organization_id: organization_id,
+              type: GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE
             }
           },
           size: 100_000
@@ -127,19 +120,19 @@ module GobiertoBudgetsData
 
         puts "Searching for first bulk..."
 
-        response = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.search(index: index, type: GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE, body: body)
+        response = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.search(index: index, body: body)
 
         bulk_operations = response["hits"]["hits"].map do |hit|
-          { delete: { _index: index, _type: GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE, _id: hit["_id"] } }
+          { delete: { _index: index, _id: hit["_id"] } }
         end
 
         while bulk_operations.any? do
           GobiertoBudgetsData::GobiertoBudgets::SearchEngineWriting.client.bulk(body: bulk_operations, refresh: true)
 
-          response = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.search(index: index, type: GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE, body: body)
+          response = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client.search(index: index, body: body)
 
           bulk_operations = response["hits"]["hits"].map do |hit|
-            { delete: { _index: index, _type: GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE, _id: hit["_id"] } }
+            { delete: { _index: index, _id: hit["_id"] } }
           end
         end
 

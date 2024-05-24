@@ -9,7 +9,7 @@ module GobiertoBudgetsData
         client = GobiertoBudgetsData::GobiertoBudgets::SearchEngine.client
         year.downto(year-2).each do |current_year|
           begin
-            return client.get(index: index, type: type, id: [ine_code, current_year].join('/'))['_source']['value']
+            return client.get(index: index, id: [ine_code, current_year, type].join('/'))['_source']['value']
           rescue Elasticsearch::Transport::Transport::Errors::NotFound
           end
         end

@@ -157,7 +157,8 @@ module GobiertoBudgetsData
           organization_id,
           year,
           area_code,
-          kind
+          kind,
+          area_name
         ].join("/")
       end
 
@@ -196,7 +197,8 @@ module GobiertoBudgetsData
           "level": level,
           "kind": kind,
           "amount_per_inhabitant": amount_per_inhabitant(index),
-          "parent_code": parent_code
+          "parent_code": parent_code,
+          "type": area_name
         }.merge(economic_code_data)
       end
 
@@ -208,7 +210,6 @@ module GobiertoBudgetsData
             index: {
               _index: index,
               _id: id,
-              _type: area_name,
               data: budget_line(index)
             }
           }
