@@ -9,7 +9,7 @@ require "active_support/all"
 require "ine/places"
 
 module GobiertoBudgetsData
-  I18n.available_locales = [:es, :en, :ca]
+  I18n.available_locales = [:es, :en, :ca, :eu]
 end
 
 require_relative "gobierto_budgets_data/file_uploader"
