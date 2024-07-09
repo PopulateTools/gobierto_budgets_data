@@ -190,6 +190,7 @@ module GobiertoBudgetsData
 
         data[:level_2_es] = localized_name_for(:es, code, kind, area_name)
         data[:level_2_ca] = localized_name_for(:ca, code, kind, area_name)
+        data[:level_2_eu] = localized_name_for(:eu, code, kind, area_name)
 
         @file_content.push(data)
       end
