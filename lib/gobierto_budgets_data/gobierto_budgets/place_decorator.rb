@@ -129,6 +129,10 @@ module GobiertoBudgetsData
         end
       end
 
+      def population_type
+        [GobiertoBudgetsData::GobiertoBudgets::POPULATION_TYPE, population_organization_id.to_s.tr("0123456789", "").split("-").first].compact.join("-")
+      end
+
       def population_place_ids
         case population_key
         when "place_id"

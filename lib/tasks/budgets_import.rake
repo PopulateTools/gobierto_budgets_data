@@ -7,8 +7,9 @@ namespace :gobierto_budgets_data do
       ActiveRecord::Base.connection
     end
 
-    def population(id, year)
-      response = GobiertoBudgets::SearchEngine.client.get index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA, id: "#{id}/#{year}/#{GobiertoBudgetsData::GobiertoBudgets::POPULATION_TYPE}"
+    def population(place, year)
+      id = [place.population_organization_id, year, place.population_type].join("/")
+      response = GobiertoBudgets::SearchEngine.client.get index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA, id:
       response['_source']['value']
     rescue
       nil
@@ -33,13 +34,13 @@ namespace :gobierto_budgets_data do
         next if ENV["custom_place_id"].present? && place.custom_place_id != ENV["custom_place_id"]
 
         pop = if place.population?
-                population(place.id, destination_year) || population(place.id, destination_year - 1) || population(place.id, destination_year - 2)
+                population(place, destination_year) || population(place, destination_year - 1) || population(place, destination_year - 2)
               else
                 nil
               end
 
         if place.population? && pop.nil?
-          puts "- Skipping #{place.id} #{place.name} because population data is missing for #{destination_year} and #{destination_year-1}"
+          puts "- Skipping #{place.population_organization_id} #{place.name} because population data is missing for #{destination_year} and #{destination_year-1}"
           next
         end
 
@@ -128,13 +129,13 @@ SQL
         next if ENV["custom_place_id"].present? && place.custom_place_id != ENV["custom_place_id"]
 
         pop = if place.population?
-                population(place.id, destination_year) || population(place.id, destination_year - 1) || population(place.id, destination_year - 2)
+                population(place, destination_year) || population(place, destination_year - 1) || population(place, destination_year - 2)
               else
                 nil
               end
 
         if place.population? && pop.nil?
-          puts "- Skipping #{place.id} #{place.name} because population data is missing for #{destination_year} and #{destination_year-1}"
+          puts "- Skipping #{place.population_organization_id} #{place.name} because population data is missing for #{destination_year} and #{destination_year-1}"
           next
         end
 
