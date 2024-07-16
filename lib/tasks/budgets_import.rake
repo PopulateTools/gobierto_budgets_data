@@ -9,7 +9,7 @@ namespace :gobierto_budgets_data do
 
     def population(place, year)
       id = [place.population_organization_id, year, place.population_type].join("/")
-      response = GobiertoBudgets::SearchEngine.client.get index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA, id:
+      response = GobiertoBudgets::SearchEngine.client.get(index: GobiertoBudgetsData::GobiertoBudgets::ES_INDEX_DATA, id:)
       response['_source']['value']
     rescue
       nil
