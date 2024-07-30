@@ -6,9 +6,9 @@ module GobiertoBudgetsData
     PLACES_COLLECTIONS = {
       ine: INE::Places::Place.all,
       deputation_eu: [
-        OpenStruct.new(id: "48000DD000", province_id: 48, autonomous_region_id: 16, name: "Diputación Foral de Vizcaya", custom_place_id: "deputation_eu", slug: "dip-bizkaia"),
+        OpenStruct.new(id: "48000DD000", province_id: 48, autonomous_region_id: 16, name: "Diputación Foral de Bizkaia", custom_place_id: "deputation_eu", slug: "dip-bizkaia"),
         OpenStruct.new(id: "01000DD000", province_id: 1, autonomous_region_id: 16, name: "Diputación Foral de Alava", custom_place_id: "deputation_eu", slug: "dip-alava"),
-        OpenStruct.new(id: "20000DD000", province_id: 20, autonomous_region_id: 16, name: "Diputación Foral de Guipúzcoa", custom_place_id: "deputation_eu", slug: "dip-gipuzkoa")
+        OpenStruct.new(id: "20000DD000", province_id: 20, autonomous_region_id: 16, name: "Diputación Foral de Gipuzkoa", custom_place_id: "deputation_eu", slug: "dip-gipuzkoa")
       ]
     }
 
