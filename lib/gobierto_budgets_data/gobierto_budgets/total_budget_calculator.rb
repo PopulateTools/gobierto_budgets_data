@@ -58,7 +58,8 @@ module GobiertoBudgetsData
           year: year,
           kind: kind,
           amount: total_budget.to_f,
-          amount_per_inhabitant: total_budget_per_inhabitant.to_f
+          amount_per_inhabitant: total_budget_per_inhabitant.to_f,
+          type: GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE
         )
 
         id = [organization_id, year, kind, GobiertoBudgetsData::GobiertoBudgets::TOTAL_BUDGET_TYPE ].join("/")
