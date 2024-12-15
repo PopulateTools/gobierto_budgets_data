@@ -30,7 +30,7 @@ module GobiertoBudgetsData
       end
 
       def uploaded_file_exists?
-        File.exists?(file_path)
+        File.exist?(file_path)
       end
 
       private
