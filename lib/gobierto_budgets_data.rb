@@ -6,7 +6,7 @@ Bundler.require
 require "i18n"
 require "oj"
 require "active_support/all"
-require "ine/places"
+require "ine"
 
 module GobiertoBudgetsData
   I18n.available_locales = [:es, :en, :ca, :eu]
