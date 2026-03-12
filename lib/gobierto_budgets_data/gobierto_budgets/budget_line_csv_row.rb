@@ -117,7 +117,7 @@ module GobiertoBudgetsData
       end
 
       def organization_id
-        row.field("organization_id")
+        row.field("organization_id")&.gsub(/\A0*/, "")
       end
 
       def place
@@ -149,7 +149,7 @@ module GobiertoBudgetsData
       end
 
       def id
-        row.field("ID").presence || automatic_id
+        row.field("id").presence&.gsub(/\A0*/, "") || automatic_id
       end
 
       def automatic_id
