@@ -14,7 +14,8 @@ module GobiertoBudgetsData
 
       KIND_VALUES_MAPPING = {
         "I" => INCOME,
-        "E" => EXPENSE
+        "E" => EXPENSE,
+        "G" => EXPENSE
       }
 
       INDEXES_COLUMNS_NAMES_MAPPING = {
