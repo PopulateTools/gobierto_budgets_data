@@ -100,7 +100,9 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.19.5)
     mini_portile2 (2.8.9)
-    minitest (5.25.5)
+    minitest (6.1.0)
+      drb (~> 2.0)
+      prism (>= 1.5, < 3)
     multi_json (1.15.0)
     net-http (0.9.1)
       uri (>= 0.11.1)
@@ -111,6 +113,7 @@ GEM
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     ostruct (0.6.3)
+    prism (2.1.0)
     racc (1.8.1)
     rack (3.2.8)
     rack-session (2.1.2)
@@ -141,4 +144,4 @@ DEPENDENCIES
   gobierto_budgets_data!
 
 BUNDLED WITH
-   2.1.4
+  4.0.20
