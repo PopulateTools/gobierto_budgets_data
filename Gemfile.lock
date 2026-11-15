@@ -29,6 +29,12 @@ GEM
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6, >= 1.7.2)
+    activemodel (8.1.4.1)
+      activesupport (= 8.1.4.1)
+    activerecord (8.1.4.1)
+      activemodel (= 8.1.4.1)
+      activesupport (= 8.1.4.1)
+      timeout (>= 0.4.0)
     activesupport (8.1.4.1)
       base64
       bigdecimal
@@ -118,6 +124,8 @@ GEM
     oj (3.17.8)
       bigdecimal (>= 3.0)
     ostruct (0.6.3)
+    pg (1.7.0)
+    pg (1.7.0-arm64-darwin)
     prism (2.1.0)
     racc (1.8.1)
     rack (3.2.8)
@@ -146,11 +154,15 @@ GEM
     zeitwerk (2.8.3)
 
 PLATFORMS
+  arm64-darwin-25
   ruby
 
 DEPENDENCIES
+  activerecord
   byebug
   gobierto_budgets_data!
+  minitest
+  pg
 
 BUNDLED WITH
   4.0.20
