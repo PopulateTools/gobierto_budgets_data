@@ -27,6 +27,7 @@ If you want to load Rake tasks you should include this snippet in the `Rakefile`
 # Load tasks from gobierto_budgets_data
 spec = Gem::Specification.find_by_name "gobierto_budgets_data"
 load "#{spec.gem_dir}/lib/tasks/data.rake"
-load "#{spec.gem_dir}/lib/tasks/budgets-import.rake"
+load "#{spec.gem_dir}/lib/tasks/budgets_import.rake"
+load "#{spec.gem_dir}/lib/tasks/total_budgets_import.rake"
 load "#{spec.gem_dir}/lib/tasks/elastic_search_schemas.rake"
 ```
