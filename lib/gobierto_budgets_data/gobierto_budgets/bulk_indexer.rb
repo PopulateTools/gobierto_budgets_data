@@ -50,9 +50,13 @@ module GobiertoBudgetsData
 
       private
 
+      # A refresh_interval of -1 comes from a load that died before restoring
+      # the settings; nil brings back the default one.
       def current_settings
         settings = @client.indices.get_settings(index: @index).values.first["settings"]["index"]
-        { "refresh_interval" => settings["refresh_interval"], "number_of_replicas" => settings["number_of_replicas"] }
+        refresh_interval = settings["refresh_interval"] unless settings["refresh_interval"] == "-1"
+
+        { "refresh_interval" => refresh_interval, "number_of_replicas" => settings["number_of_replicas"] }
       end
 
       def update_settings(settings)

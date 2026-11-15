@@ -47,6 +47,14 @@ class BulkIndexerTest < Minitest::Test
     assert_equal({ "number_of_replicas" => "1" }, settings)
   end
 
+  def test_restores_default_refresh_interval_left_disabled_by_an_interrupted_load
+    client.indices.put_settings(index:, body: { index: { refresh_interval: "-1" } })
+
+    BulkIndexer.open(client:, index:) { |indexer| indexer.add("doc", { "code" => "1" }) }
+
+    assert_equal({ "number_of_replicas" => "1" }, settings)
+  end
+
   def test_restores_settings_when_indexing_fails
     assert_raises(RuntimeError) do
       BulkIndexer.open(client:, index:) { raise "boom" }
