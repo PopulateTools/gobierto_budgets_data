@@ -41,5 +41,6 @@ require_relative "gobierto_budgets_data/gobierto_budgets/search_engine_configura
 require_relative "gobierto_budgets_data/gobierto_budgets/search_engine_configuration/year"
 require_relative "gobierto_budgets_data/gobierto_budgets/place_decorator"
 require_relative "gobierto_budgets_data/gobierto_budgets/places_budgets_importer"
+require_relative "gobierto_budgets_data/gobierto_budgets/places_total_budgets_importer"
 require_relative "gobierto_budgets_data/gobierto_budgets/searchable"
 require_relative "gobierto_budgets_data/gobierto_budgets/describable"
