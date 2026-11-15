@@ -24,15 +24,9 @@ namespace :gobierto_budgets_data do
       db = create_db_connection(db_name)
 
       places_key = opts.fetch(:place_type, :ine)
-      places = GobiertoBudgetsData::GobiertoBudgets::PlaceDecorator.collection(places_key)
+      places = GobiertoBudgetsData::GobiertoBudgets::PlaceDecorator.collection(places_key, ENV)
 
       places.each do |place|
-        place.attributes.each do |key, value|
-          next if ENV[key].present? && value != ENV[key].to_i
-        end
-
-        next if ENV["custom_place_id"].present? && place.custom_place_id != ENV["custom_place_id"]
-
         pop = if place.population?
                 population(place, destination_year) || population(place, destination_year - 1) || population(place, destination_year - 2)
               else
@@ -119,15 +113,9 @@ SQL
       db = create_db_connection(db_name)
 
       places_key = opts.fetch(:place_type, :ine)
-      places = GobiertoBudgetsData::GobiertoBudgets::PlaceDecorator.collection(places_key)
+      places = GobiertoBudgetsData::GobiertoBudgets::PlaceDecorator.collection(places_key, ENV)
 
       places.each do |place|
-        place.attributes.each do |key, value|
-          next if ENV[key].present? && value != ENV[key].to_i
-        end
-
-        next if ENV["custom_place_id"].present? && place.custom_place_id != ENV["custom_place_id"]
-
         pop = if place.population?
                 population(place, destination_year) || population(place, destination_year - 1) || population(place, destination_year - 2)
               else

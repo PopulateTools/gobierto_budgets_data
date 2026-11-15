@@ -21,13 +21,13 @@ module GobiertoBudgetsData
       attr_reader :id, :place
       delegate :name, :slug, to: :place
 
-      def self.collection(key)
+      # filters: optional place_id, province_id, autonomous_region_id and
+      # custom_place_id values, usually taken from ENV
+      def self.collection(key, filters = {})
         key = key.to_sym
         raise "Invalid place_type #{key}. Valid place types: #{places_keys.join(", ")} " unless places_keys.include?(key)
 
-        PLACES_COLLECTIONS[key].map do |place|
-          new(place)
-        end
+        PLACES_COLLECTIONS[key].map { |place| new(place) }.select { |place| place.matches?(filters) }
       end
 
       def self.collection_organization_ids(key)
@@ -85,6 +85,11 @@ module GobiertoBudgetsData
           "province_id" => (place.try(:province_id) || place.province.id)&.to_i,
           "autonomous_region_id" => (place.try(:autonomous_region_id) || place.province.autonomous_region.id)&.to_i
         }
+      end
+
+      def matches?(filters)
+        attributes.all? { |key, value| filters[key].blank? || value == filters[key].to_i } &&
+          (filters["custom_place_id"].blank? || custom_place_id == filters["custom_place_id"])
       end
 
       def province

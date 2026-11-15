@@ -37,15 +37,9 @@ namespace :gobierto_budgets_data do
 
     def import_total_budget(year, index, kind, opts = {})
       places_key = opts.fetch(:place_type, :ine)
-      places = GobiertoBudgetsData::GobiertoBudgets::PlaceDecorator.collection(places_key)
+      places = GobiertoBudgetsData::GobiertoBudgets::PlaceDecorator.collection(places_key, ENV)
 
       places.each do |place|
-        place.attributes.each do |key, value|
-          next if ENV[key].present? && value != ENV[key].to_i
-        end
-
-        next if ENV["custom_place_id"].present? && place.custom_place_id != ENV["custom_place_id"]
-
         total_budget, total_budget_per_inhabitant = get_data(index, place, year, kind)
         if total_budget == 0.0 && kind == 'G'
           total_budget, total_budget_per_inhabitant = get_data(index, place, year, kind, 'economic')
