@@ -21,5 +21,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "ine-places", "~> 0.7.0"
   s.add_runtime_dependency "rake", "~> 13.0"
 
+  s.add_development_dependency "activerecord"
   s.add_development_dependency "byebug"
+  s.add_development_dependency "minitest"
+  s.add_development_dependency "pg"
 end
